@@ -51,7 +51,8 @@
                     <Button Content="Add New Client"
                             Width="130"
                             Height="34"
-                            FontWeight="SemiBold"/>
+                            FontWeight="SemiBold"
+                            Click="AddNewClient_Click"/>
                 </StackPanel>
             </Grid>
         </Border>
@@ -105,38 +106,20 @@
                             CornerRadius="8"
                             Padding="8">
                         <ListBox BorderThickness="0"
-                                 Background="Transparent">
-                            <ListBoxItem Padding="8">
-                                <StackPanel>
-                                    <TextBlock Text="HC-001 • Hristijan Cupetreski"
-                                                   FontWeight="SemiBold"
-                                                   FontSize="14"/>
-                                </StackPanel>
-                            </ListBoxItem>
+                                 Background="Transparent"
+                                 SelectionChanged="ClientList_SelectionChanged"
+                                 x:Name="ClientList">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBlock FontWeight="SemiBold"
+                                            FontSize="14">
+                                            <Run Text="{Binding FullName}" />       
+                                        </TextBlock>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
 
-                            <ListBoxItem Padding="8">
-                                <StackPanel>
-                                    <TextBlock Text="HC-002 • Ana Trajkovska"
-                                               FontWeight="SemiBold"
-                                               FontSize="14"/>
-                                </StackPanel>
-                            </ListBoxItem>
-
-                            <ListBoxItem Padding="8">
-                                <StackPanel>
-                                    <TextBlock Text="HC-003 • Marko Petreski"
-                                               FontWeight="SemiBold"
-                                               FontSize="14"/>
-                                </StackPanel>
-                            </ListBoxItem>
-
-                            <ListBoxItem Padding="8">
-                                <StackPanel>
-                                    <TextBlock Text="HC-004 • Elena Stojanovska"
-                                               FontWeight="SemiBold"
-                                               FontSize="14"/>
-                                </StackPanel>
-                            </ListBoxItem>
                         </ListBox>
                     </Border>
                 </Grid>
@@ -150,7 +133,7 @@
                         Background="White"
                         CornerRadius="10"
                         Padding="18"
-                        Visibility="Collapsed">
+                        Visibility="Visible">
                     <Border Background="#F9FAFB"
                         BorderBrush="#E5E7EB"
                         BorderThickness="1"
@@ -182,7 +165,7 @@
                     Background="White"
                     CornerRadius="10"
                     Padding="18"
-                    Visibility="Collapsed">
+                        Visibility="Collapsed">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -261,6 +244,8 @@
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="12"/>
                                         <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="12"/>
+                                        <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
 
                                     <TextBlock Grid.Row="0"
@@ -272,16 +257,19 @@
                                    Margin="0,0,0,6"/>
 
                                     <TextBlock Grid.Row="2" Grid.Column="0" Text="Full Name:" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Row="2" Grid.Column="1" Height="34" Text="Hristijan Cupetreski"/>
+                                    <TextBox Grid.Row="2" Grid.Column="1" Height="34" x:Name="FullNameBox"/>
 
                                     <TextBlock Grid.Row="4" Grid.Column="0" Text="Date of Birth:" VerticalAlignment="Center"/>
-                                    <DatePicker Grid.Row="4" Grid.Column="1" Height="34"/>
+                                    <DatePicker Grid.Row="4" Grid.Column="1" Height="34" x:Name="DateBirthBox"/>
 
                                     <TextBlock Grid.Row="6" Grid.Column="0" Text="Phone:" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Row="6" Grid.Column="1" Height="34" Text="+386 40 123 456"/>
+                                    <TextBox Grid.Row="6" Grid.Column="1" Height="34" x:Name="PhoneBox"/>
 
                                     <TextBlock Grid.Row="8" Grid.Column="0" Text="Passport Number:" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Row="8" Grid.Column="1" Height="34" Text="P12345678"/>
+                                    <TextBox Grid.Row="8" Grid.Column="1" Height="34" x:Name="PassportBox"/>
+
+                                    <TextBlock Grid.Row="10" Grid.Column="0" Text="Notes" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="10" Grid.Column="1" Height="34" x:Name="NotesBox"/>
                                 </Grid>
                             </Border>
 
@@ -360,7 +348,8 @@
                     Background="White"
                     CornerRadius="10"
                     Padding="18"
-                    Visibility="Visible">
+                    Visibility="Collapsed"
+                        >
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <Border Background="White" Padding="10">
                             <Grid>

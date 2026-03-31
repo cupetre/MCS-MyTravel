@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace MCS_Software
@@ -8,9 +10,19 @@ namespace MCS_Software
     /// </summary>
     public partial class MainWindow : Window
     {
+
         public MainWindow()
         {
             InitializeComponent();
+
+            List<Client> clients = new List<Client>
+            {
+                new Client { Id = 1, FullName = "James", PassportID = "P123", Date = DateTime.Now, Phone = "123", Notes = "" },
+                new Client { Id = 2, FullName = "BaconBoy" , PassportID = "P456", Date = DateTime.Now, Phone = "456", Notes = "" },
+                new Client { Id = 2, FullName = "Bachata" , PassportID = "P456", Date = DateTime.Now, Phone = "456", Notes = "" }
+            };
+
+            ClientList.ItemsSource = clients;
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -47,6 +59,24 @@ namespace MCS_Software
         private void CancelAddNewClient_Click(object sender, RoutedEventArgs e)
         {
             ShowNoClientSelectedView();
+        }
+
+        private void ClientList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ShowSelectedClientView();
+
+            Client selectedClient = ClientList.SelectedItem as Client;
+
+            if (selectedClient == null)
+            {
+                return;
+            }
+
+            FullNameBox.Text = selectedClient.FullName;
+            PhoneBox.Text = selectedClient.Phone;
+            DateBirthBox.SelectedDate = selectedClient.Date;
+            PassportBox.Text = selectedClient.PassportID;
+            NotesBox.Text = selectedClient.Notes;
         }
     }
 }
