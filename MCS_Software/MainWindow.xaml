@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Client Document Manager"
-        Height="900"
-        Width="1250"
+        Height="1222"
+        Width="1132"
         MinHeight="650"
         MinWidth="1100"
         WindowStartupLocation="CenterScreen"
@@ -114,7 +114,7 @@
                                     <StackPanel>
                                         <TextBlock FontWeight="SemiBold"
                                             FontSize="14">
-                                            <Run Text="{Binding FullName}" />       
+                                            <Run Text="{Binding FullName}" />
                                         </TextBlock>
                                     </StackPanel>
                                 </DataTemplate>
@@ -122,13 +122,363 @@
 
                         </ListBox>
                     </Border>
+
                 </Grid>
             </Border>
-            
+
             <!-- right side -->
             <Grid Grid.Column="2">
 
+                <!-- booking panel -->
+                <Border x:Name="BookingPanel" 
+                    Background="White"
+                    CornerRadius="10"
+                    Padding="18"
+                    Visibility="Visible">
 
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="16"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- HEADER -->
+                        <StackPanel Grid.Row="0">
+                            <TextBlock Text="Create Booking"
+                   FontSize="24"
+                   FontWeight="Bold"/>
+                            <TextBlock Text="Enter the booking information for the selected client."
+                   Margin="0,6,0,0"
+                   FontSize="13"
+                   Opacity="0.75"/>
+                        </StackPanel>
+
+                        <!-- SELECTED CLIENT INFO -->
+                        <Border Grid.Row="2"
+            Padding="16"
+            CornerRadius="8"
+            Background="#F5F5F5"
+            BorderBrush="#DDDDDD"
+            BorderThickness="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="160"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="10"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="10"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="2"
+                       Text="Selected Client"
+                       FontSize="16"
+                       FontWeight="SemiBold"
+                       Margin="0,0,0,4"/>
+
+                                <TextBlock Grid.Row="2"
+                       Grid.Column="0"
+                       Text="Full Name:"
+                       VerticalAlignment="Center"/>
+                                <TextBlock x:Name="BookingClientNameText"
+                       Grid.Row="2"
+                       Grid.Column="1"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center"
+                       Text="No client selected"/>
+
+                                <TextBlock Grid.Row="4"
+                       Grid.Column="0"
+                       Text="Passport Number:"
+                       VerticalAlignment="Center"/>
+                                <TextBlock x:Name="BookingClientPassportText"
+                       Grid.Row="4"
+                       Grid.Column="1"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center"
+                       Text="-"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- BOOKING FORM -->
+                        <Border Grid.Row="4"
+            Padding="16"
+            CornerRadius="8"
+            Background="White"
+            BorderBrush="#DDDDDD"
+            BorderThickness="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="170"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="12"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="12"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="12"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="12"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="12"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="2"
+                       Text="Booking Information"
+                       FontSize="18"
+                       FontWeight="Bold"
+                       Margin="0,0,0,6"/>
+
+                                <TextBlock Grid.Row="2"
+                       Grid.Column="0"
+                       Text="Start Date:"
+                       VerticalAlignment="Center"/>
+                                <DatePicker x:Name="BookingStartDatePicker"
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Height="34"/>
+
+                                <TextBlock Grid.Row="4"
+                       Grid.Column="0"
+                       Text="End Date:"
+                       VerticalAlignment="Center"/>
+                                <DatePicker x:Name="BookingEndDatePicker"
+                        Grid.Row="4"
+                        Grid.Column="1"
+                        Height="34"/>
+
+                                <TextBlock Grid.Row="6"
+                       Grid.Column="0"
+                       Text="Place of Stay:"
+                       VerticalAlignment="Center"/>
+                                <TextBox x:Name="BookingPlaceTextBox"
+                     Grid.Row="6"
+                     Grid.Column="1"
+                     Height="34"/>
+
+                                <TextBlock Grid.Row="8"
+                       Grid.Column="0"
+                       Text="Total Price:"
+                       VerticalAlignment="Center"/>
+                                <TextBox x:Name="BookingTotalPriceTextBox"
+                     Grid.Row="8"
+                     Grid.Column="1"
+                     Height="34"/>
+
+                                <TextBlock Grid.Row="10"
+                       Grid.Column="0"
+                       Text="Notes:"
+                       VerticalAlignment="Top"
+                       Margin="0,6,0,0"/>
+                                <TextBox x:Name="BookingNotesTextBox"
+                     Grid.Row="10"
+                     Grid.Column="1"
+                     Height="90"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     VerticalScrollBarVisibility="Auto"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- PASSENGERS -->
+                        <Border Grid.Row="6"
+                            Padding="16"
+                            CornerRadius="8"
+                            Background="White"
+                            BorderBrush="#DDDDDD"
+                            BorderThickness="1">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="14"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="14"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0"
+                       Text="Passengers"
+                       FontSize="18"
+                       FontWeight="Bold"/>
+
+                                <!-- Add passenger form -->
+                                <Grid Grid.Row="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="141*"/>
+                                        <ColumnDefinition Width="46*"/>
+                                        <ColumnDefinition Width="14"/>
+                                        <ColumnDefinition Width="220"/>
+                                        <ColumnDefinition Width="14"/>
+                                        <ColumnDefinition Width="120"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="8"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0"
+                           Grid.Column="0"
+                           Text="Full Name" Grid.ColumnSpan="2" Margin="0,0,0,8" Grid.RowSpan="2"/>
+                                    <TextBlock Grid.Row="0"
+                           Grid.Column="3"
+                           Text="Passport ID" Margin="0,0,0,8" Grid.RowSpan="2"/>
+
+                                    <TextBox x:Name="PassengerFullNameTextBox"
+                         Grid.Row="2"
+                         Grid.Column="0"
+                         Height="34" Grid.ColumnSpan="2"/>
+
+                                    <TextBox x:Name="PassengerPassportTextBox"
+                         Grid.Row="2"
+                         Grid.Column="3"
+                         Height="34"/>
+
+                                    <Button x:Name="AddPassengerButton"
+                        Grid.Row="2"
+                        Grid.Column="5"
+                        Height="34"
+                        Content="Add Passenger"
+                        Click="AddPassengerButton_Click"/>
+                                </Grid>
+
+                                <!-- Passenger list -->
+                                <Grid Grid.Row="4">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="8"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0"
+                           Text="Added Passengers"
+                           FontWeight="SemiBold"/>
+
+                                    <Border Grid.Row="2"
+                        BorderBrush="#DDDDDD"
+                        BorderThickness="1"
+                        CornerRadius="6"
+                        Padding="6">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="6"/>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+
+                                            <!-- Optional column header -->
+                                            <Grid Grid.Row="0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="200"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Grid.Column="0"
+                                       Text="Full Name"
+                                       FontWeight="SemiBold"/>
+                                                <TextBlock Grid.Column="1"
+                                       Text="Passport ID"
+                                       FontWeight="SemiBold"/>
+                                            </Grid>
+
+                                            <ListBox x:Name="PassengerListBox"
+                                             Grid.Row="2"
+                                             BorderThickness="0"
+                                             Background="Transparent"
+                                             ItemsSource="{Binding CurrentBooking.Passengers}">
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border BorderBrush="#DDDDDD"
+                                                                    BorderThickness="1"
+                                                                    CornerRadius="6"
+                                                                    Padding="10"
+                                                                    Margin="0,0,0,8">
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="*"/>
+                                                                    <ColumnDefinition Width="14"/>
+                                                                    <ColumnDefinition Width="220"/>
+                                                                    <ColumnDefinition Width="14"/>
+                                                                    <ColumnDefinition Width="100"/>
+                                                                </Grid.ColumnDefinitions>
+
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition Height="Auto"/>
+                                                                    <RowDefinition Height="8"/>
+                                                                    <RowDefinition Height="Auto"/>
+                                                                </Grid.RowDefinitions>
+
+                                                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Full Name"/>
+                                                                <TextBlock Grid.Row="0" Grid.Column="2" Text="Passport ID"/>
+
+                                                                <TextBox Grid.Row="2"
+                                                                 Grid.Column="0"
+                                                                 Height="34"
+                                                                 Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                                <TextBox Grid.Row="2"
+                                                                 Grid.Column="2"
+                                                                 Height="34"
+                                                                 Text="{Binding PassportId, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                                <Button Grid.Row="2"
+                                                                    Grid.Column="4"
+                                                                    Height="34"
+                                                                    Content="Remove"
+                                                                    Click="RemovePassengerButton_Click"/>
+                                                            </Grid>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <!-- ACTION BUTTONS -->
+                        <StackPanel Grid.Row="8"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right">
+                            <Button x:Name="CancelBookingButton"
+                Content="Cancel"
+                Width="120"
+                Height="36"
+                Margin="0,0,12,0"
+                Click="CancelBookingButton_Click"/>
+
+                            <Button x:Name="SaveBookingButton"
+                Content="Save Booking"
+                Width="140"
+                Height="36"
+                Click="SaveBookingButton_Click"/>
+                        </StackPanel>
+
+                    </Grid>
+                </Border>
+
+                <!-- no CLIENTS VIEW FROM HERE -->
                 <Border x:Name="NoClientSelectedView"
                         Background="White"
                         CornerRadius="10"
@@ -351,7 +701,7 @@
                     Background="White"
                     CornerRadius="10"
                     Padding="18"
-                    Visibility="Visible"
+                    Visibility="Collapsed"
                         >
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <Border Background="White" Padding="10">
@@ -421,7 +771,7 @@
                                             Width="120"
                                             Height="36"
                                             FontWeight="SemiBold"
-                                                Click="AddNewClient_Click"/>
+                                                Click="SaveNewClient_Click"/>
                                     </StackPanel>
                                 </Grid>
                             </Grid>
@@ -430,7 +780,7 @@
                 </Border>
 
             </Grid>
-            
+
         </Grid>
     </Grid>
 </Window>
