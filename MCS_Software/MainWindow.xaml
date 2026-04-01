@@ -133,7 +133,7 @@
                         Background="White"
                         CornerRadius="10"
                         Padding="18"
-                        Visibility="Visible">
+                        Visibility="Collapsed">
                     <Border Background="#F9FAFB"
                         BorderBrush="#E5E7EB"
                         BorderThickness="1"
@@ -192,15 +192,12 @@
                                     </Grid.ColumnDefinitions>
 
                                     <StackPanel>
-                                        <TextBlock Text="Selected Client"
-                                       FontSize="13"
-                                       Foreground="#6B7280"/>
-                                        <TextBlock Text="0001 • Hristijan Cupetreski"
+                                        <TextBlock x:Name="ClientNameHeader"
                                        FontSize="24"
                                        FontWeight="Bold"
                                        Foreground="#111827"
                                        Margin="0,4,0,0"/>
-                                        <TextBlock Text="Client profile and related document actions."
+                                        <TextBlock Text="Профил и Информации"
                                        FontSize="13"
                                        Foreground="#6B7280"
                                        Margin="0,6,0,0"/>
@@ -209,14 +206,20 @@
                                     <StackPanel Grid.Column="1"
                                     Orientation="Horizontal"
                                     VerticalAlignment="Top">
-                                        <Button Content="Edit Client"
+                                        <Button x:Name="EditButton"
+                                                Content="Edit Client"
                                     Width="100"
                                     Height="34"
-                                    Margin="0,0,10,0"/>
-                                        <Button Content="Save Changes"
+                                    Margin="0,0,10,0"
+                                                Click="EditButton_Click"
+                                                IsEnabled="True"/>
+                                        <Button x:Name="SaveButton"
+                                            Content="Save Changes"
                                     Width="110"
                                     Height="34"
-                                    FontWeight="SemiBold"/>
+                                    FontWeight="SemiBold"
+                                                Click="SaveButton_Click"
+                                                IsEnabled="False"/>
                                     </StackPanel>
                                 </Grid>
                             </Border>
@@ -257,19 +260,19 @@
                                    Margin="0,0,0,6"/>
 
                                     <TextBlock Grid.Row="2" Grid.Column="0" Text="Full Name:" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Row="2" Grid.Column="1" Height="34" x:Name="FullNameBox"/>
+                                    <TextBox Grid.Row="2" Grid.Column="1" Height="34" x:Name="FullNameBox" IsEnabled="False"/>
 
                                     <TextBlock Grid.Row="4" Grid.Column="0" Text="Date of Birth:" VerticalAlignment="Center"/>
-                                    <DatePicker Grid.Row="4" Grid.Column="1" Height="34" x:Name="DateBirthBox"/>
+                                    <DatePicker Grid.Row="4" Grid.Column="1" Height="34" x:Name="DateBirthBox" IsEnabled="False"/>
 
                                     <TextBlock Grid.Row="6" Grid.Column="0" Text="Phone:" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Row="6" Grid.Column="1" Height="34" x:Name="PhoneBox"/>
+                                    <TextBox Grid.Row="6" Grid.Column="1" Height="34" x:Name="PhoneBox" IsEnabled="False"/>
 
                                     <TextBlock Grid.Row="8" Grid.Column="0" Text="Passport Number:" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Row="8" Grid.Column="1" Height="34" x:Name="PassportBox"/>
+                                    <TextBox Grid.Row="8" Grid.Column="1" Height="34" x:Name="PassportBox" IsEnabled="False"/>
 
                                     <TextBlock Grid.Row="10" Grid.Column="0" Text="Notes" VerticalAlignment="Center"/>
-                                    <TextBox Grid.Row="10" Grid.Column="1" Height="34" x:Name="NotesBox"/>
+                                    <TextBox Grid.Row="10" Grid.Column="1" Height="34" x:Name="NotesBox" IsEnabled="False"/>
                                 </Grid>
                             </Border>
 
@@ -348,7 +351,7 @@
                     Background="White"
                     CornerRadius="10"
                     Padding="18"
-                    Visibility="Collapsed"
+                    Visibility="Visible"
                         >
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <Border Background="White" Padding="10">
@@ -413,10 +416,12 @@
                                             Height="36"
                                             Margin="0,0,10,0"
                                             Click="CancelAddNewClient_Click"/>
-                                        <Button Content="Save Client"
+                                        <Button x:Name="SaveClientButton"
+                                                Content="Save Client"
                                             Width="120"
                                             Height="36"
-                                            FontWeight="SemiBold"/>
+                                            FontWeight="SemiBold"
+                                                Click="AddNewClient_Click"/>
                                     </StackPanel>
                                 </Grid>
                             </Grid>

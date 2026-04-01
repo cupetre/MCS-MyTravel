@@ -23,6 +23,12 @@ namespace MCS_Software
             };
 
             ClientList.ItemsSource = clients;
+
+        }
+
+        private Client SelectedClient
+        {
+            get { return ClientList.SelectedItem as Client; }
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -42,6 +48,8 @@ namespace MCS_Software
             NoClientSelectedView.Visibility = Visibility.Collapsed;
             SelectedClientView.Visibility = Visibility.Visible;
             AddNewClientView.Visibility = Visibility.Collapsed;
+
+            EditButton.IsEnabled = true;
         }
 
         private void ShowAddNewClientView()
@@ -63,20 +71,63 @@ namespace MCS_Software
 
         private void ClientList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            EditButton.IsEnabled = true;
+
             ShowSelectedClientView();
 
-            Client selectedClient = ClientList.SelectedItem as Client;
-
-            if (selectedClient == null)
+            if (SelectedClient == null)
             {
                 return;
             }
 
-            FullNameBox.Text = selectedClient.FullName;
-            PhoneBox.Text = selectedClient.Phone;
-            DateBirthBox.SelectedDate = selectedClient.Date;
-            PassportBox.Text = selectedClient.PassportID;
-            NotesBox.Text = selectedClient.Notes;
+            FullNameBox.Text = SelectedClient.FullName;
+            PhoneBox.Text = SelectedClient.Phone;
+            DateBirthBox.SelectedDate = SelectedClient.Date;
+            PassportBox.Text = SelectedClient.PassportID;
+            NotesBox.Text = SelectedClient.Notes;
+
+            ClientNameHeader.Text = SelectedClient.FullName;
+
+            setEditingState(false);
+        }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            if ( SelectedClient == null)
+            {
+                return;
+            }
+
+            SelectedClient.FullName = FullNameBox.Text;
+            SelectedClient.Phone = PhoneBox.Text;
+            SelectedClient.PassportID = PassportBox.Text;
+            SelectedClient.Date = DateBirthBox.SelectedDate ?? DateTime.MinValue;
+
+            ClientList.Items.Refresh();
+            
+            setEditingState(false);
+        }
+
+        private void EditButton_Click(Object sender, RoutedEventArgs e)
+        {
+
+            if ( SelectedClient == null)
+            {
+                return;
+            }
+
+            setEditingState(true);
+        }
+
+        private void setEditingState(bool isEditing)
+        {
+            FullNameBox.IsEnabled = isEditing;
+            PhoneBox.IsEnabled = isEditing;
+            DateBirthBox.IsEnabled = isEditing;
+            PassportBox.IsEnabled = isEditing;
+
+            EditButton.IsEnabled = !isEditing;
+            SaveButton.IsEnabled = isEditing;
         }
     }
 }
