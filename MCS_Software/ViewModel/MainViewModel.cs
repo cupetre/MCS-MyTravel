@@ -8,9 +8,9 @@ using MCS_Software.Models;
 
 namespace MCS_Software.ViewModel
 {
-    internal class MainViewModel
+    public class MainViewModel
     {
-        ObservableCollection<Client> Clients { get; set; }
+        public ObservableCollection<Client> Clients { get; set; }
         public Booking CurrentBooking { get; set; }
 
         public MainViewModel()

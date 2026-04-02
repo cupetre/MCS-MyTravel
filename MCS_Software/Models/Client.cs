@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MCS_Software
+namespace MCS_Software.Models
 {
-    internal class Client
+    public class Client
     {
         public int Id { get; set; }
         public string FullName { get; set; }

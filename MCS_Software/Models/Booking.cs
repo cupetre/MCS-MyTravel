@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MCS_Software.Models
 {
-    internal class Booking
+    public class Booking
     {
         public int Id { get; set; }
         public int ClientId { get; set; }

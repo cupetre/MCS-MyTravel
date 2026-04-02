@@ -15,9 +15,9 @@ namespace MCS_Software
     {
         private MainViewModel viewModel;
 
-        private BookingServices bookingServices;
+        private BookingServices bookingServices = new BookingServices();
 
-        private ClientServices clientServices; 
+        private ClientServices clientServices = new ClientServices();
 
         public MainWindow()
         {
@@ -37,11 +37,8 @@ namespace MCS_Software
                 new Booking { Id = 3, ClientId = 3, StartDate = DateTime.Now, EndDate = DateTime.Now , Destination = "Malta", TotalPrice = 100 , Passengers = { }, Status = "Active" , Notes = "" }
             };
 
-            ClientList.ItemsSource = clients;
-
             viewModel = new MainViewModel();
             DataContext = viewModel;
-
         }
 
         private Client SelectedClient
@@ -54,16 +51,13 @@ namespace MCS_Software
             get { return BookingList.SelectedItem as Booking; }
         } */
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-                
-        }
-
         private void ShowNoClientSelectedView()
         {
             NoClientSelectedView.Visibility = Visibility.Visible;
             SelectedClientView.Visibility = Visibility.Collapsed;
             AddNewClientView.Visibility = Visibility.Collapsed;
+            BookingPanel.Visibility = Visibility.Collapsed;
+
         }
 
         private void ShowSelectedClientView()
@@ -71,6 +65,7 @@ namespace MCS_Software
             NoClientSelectedView.Visibility = Visibility.Collapsed;
             SelectedClientView.Visibility = Visibility.Visible;
             AddNewClientView.Visibility = Visibility.Collapsed;
+            BookingPanel.Visibility = Visibility.Collapsed;
 
             EditButton.IsEnabled = true;
         }
@@ -80,6 +75,14 @@ namespace MCS_Software
             NoClientSelectedView.Visibility = Visibility.Collapsed;
             SelectedClientView.Visibility = Visibility.Collapsed;
             AddNewClientView.Visibility = Visibility.Visible;
+            BookingPanel.Visibility = Visibility.Collapsed;
+        }
+        private void ShowBookingView()
+        {
+            NoClientSelectedView.Visibility = Visibility.Collapsed;
+            SelectedClientView.Visibility = Visibility.Collapsed;
+            AddNewClientView.Visibility = Visibility.Collapsed;
+            BookingPanel.Visibility = Visibility.Visible;
         }
 
         private void AddNewClient_Click(object sender, RoutedEventArgs e)
@@ -96,12 +99,13 @@ namespace MCS_Software
         {
             EditButton.IsEnabled = true;
 
-            ShowSelectedClientView();
-
             if (SelectedClient == null)
             {
+                ShowNoClientSelectedView();
                 return;
             }
+
+            ShowSelectedClientView();
 
             FullNameBox.Text = SelectedClient.FullName;
             PhoneBox.Text = SelectedClient.Phone;
@@ -111,7 +115,26 @@ namespace MCS_Software
 
             ClientNameHeader.Text = SelectedClient.FullName;
 
-            setEditingState(false);
+            SetEditingState(false);
+        }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (SelectedClient == null)
+                return;
+
+            clientServices.UpdateClient(
+                SelectedClient,
+                FullNameBox.Text,
+                PassportBox.Text,
+                DateBirthBox.SelectedDate ?? DateTime.MinValue,
+                PhoneBox.Text,
+                NotesBox.Text
+            );
+
+            ClientNameHeader.Text = SelectedClient.FullName;
+
+            SetEditingState(false);
         }
 
         private void EditButton_Click(Object sender, RoutedEventArgs e)
@@ -122,42 +145,48 @@ namespace MCS_Software
                 return;
             }
 
-            setEditingState(true);
+            SetEditingState(true);
         }
         private void SaveNewClient_Click(object sender, RoutedEventArgs e)
         {
-            if (SelectedClient == null)
+            // Basic validation
+            if (string.IsNullOrWhiteSpace(NewFullName.Text))
             {
+                MessageBox.Show("Please enter a full name.", "Validation");
                 return;
             }
 
             Client newClient = new Client
             {
-                FullName = FullNameBox.Text,
-                Phone = PhoneBox.Text,
-                PassportID = PassportBox.Text,
-                Date = DateBirthBox.SelectedDate ?? DateTime.MinValue
+                Id = viewModel.Clients.Count + 1,
+                FullName = NewFullName.Text,
+                Phone = NewPhone.Text,
+                PassportID = NewPassport.Text,
+                Date = NewDateBirth.SelectedDate ?? DateTime.MinValue,
+                Notes = NewNotes.Text
             };
 
+            viewModel.Clients.Add(newClient);
             clientServices.AddClient(newClient);
+
+            // Clear the form
+            NewFullName.Text = "";
+            NewPhone.Text = "";
+            NewPassport.Text = "";
+            NewDateBirth.SelectedDate = null;
+            NewNotes.Text = "";
+
             ClientList.SelectedItem = newClient;
-            SetBookingState();
+            ShowBookingView();
         }
 
         private void ArrangeBooking (Object sender, RoutedEventArgs e)
         {
             // first we check for the entered info/data for the client here
             // if everything is as itshould be. ask if he wants to continue to booking state
-            SetBookingState();
+            ShowBookingView();
         }
 
-        private void SetBookingState()
-        {
-            NoClientSelectedView.Visibility = Visibility.Collapsed;
-            SelectedClientView.Visibility = Visibility.Collapsed;
-            AddNewClientView.Visibility = Visibility.Collapsed;
-            BookingPanel.Visibility = Visibility.Visible;
-        }
 
         private void SaveBookingButton_Click(object sender, RoutedEventArgs e)
         {
@@ -176,7 +205,23 @@ namespace MCS_Software
             bookingServices.AddBooking(booking);
         }
 
-        private void setEditingState(bool isEditing)
+        private void CancelBookingButton_Click(object sender, RoutedEventArgs e)
+        {
+            BookingStartDatePicker.SelectedDate = null;
+            BookingEndDatePicker.SelectedDate = null;
+            BookingPlaceTextBox.Text = "";
+            BookingTotalPriceTextBox.Text = "";
+            BookingNotesTextBox.Text = "";
+
+            viewModel.CurrentBooking.Passengers.Clear();
+
+            if (SelectedClient != null)
+                ShowSelectedClientView();
+            else
+                ShowNoClientSelectedView();
+        }
+
+        private void SetEditingState(bool isEditing)
         {
             FullNameBox.IsEnabled = isEditing;
             PhoneBox.IsEnabled = isEditing;
@@ -187,7 +232,7 @@ namespace MCS_Software
             SaveButton.IsEnabled = isEditing;
         }
 
-        private void AddPassengerButton(Object sender, RoutedEventArgs e)
+        private void AddPassengerButton_Click(Object sender, RoutedEventArgs e)
         {
             viewModel.CurrentBooking.Passengers.Add(new Passenger());
         }

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace MCS_Software.Models
 {
-    internal class Passenger
+    public class Passenger
     {
-        public int id {  get; set; }
+        public int Id {  get; set; }
         public string Name {  get; set; }
         public int BookingID {  get; set; }
         public string PassportID {  get; set; }
