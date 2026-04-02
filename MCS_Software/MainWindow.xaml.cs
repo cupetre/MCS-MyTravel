@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using MCS_Software.Models;
 using MCS_Software.Services;
 using MCS_Software.ViewModel;
@@ -57,6 +58,7 @@ namespace MCS_Software
             SelectedClientView.Visibility = Visibility.Collapsed;
             AddNewClientView.Visibility = Visibility.Collapsed;
             BookingPanel.Visibility = Visibility.Collapsed;
+            DocumentChoiceView.Visibility = Visibility.Collapsed;
 
         }
 
@@ -66,6 +68,7 @@ namespace MCS_Software
             SelectedClientView.Visibility = Visibility.Visible;
             AddNewClientView.Visibility = Visibility.Collapsed;
             BookingPanel.Visibility = Visibility.Collapsed;
+            DocumentChoiceView.Visibility = Visibility.Collapsed;
 
             EditButton.IsEnabled = true;
         }
@@ -76,6 +79,7 @@ namespace MCS_Software
             SelectedClientView.Visibility = Visibility.Collapsed;
             AddNewClientView.Visibility = Visibility.Visible;
             BookingPanel.Visibility = Visibility.Collapsed;
+            DocumentChoiceView.Visibility = Visibility.Collapsed;
         }
         private void ShowBookingView()
         {
@@ -83,6 +87,16 @@ namespace MCS_Software
             SelectedClientView.Visibility = Visibility.Collapsed;
             AddNewClientView.Visibility = Visibility.Collapsed;
             BookingPanel.Visibility = Visibility.Visible;
+            DocumentChoiceView.Visibility = Visibility.Collapsed;
+        }
+
+        private void ShowDocumentChoiceState()
+        {
+            NoClientSelectedView.Visibility = Visibility.Collapsed;
+            SelectedClientView.Visibility = Visibility.Collapsed;
+            AddNewClientView.Visibility = Visibility.Collapsed;
+            BookingPanel.Visibility = Visibility.Collapsed;
+            DocumentChoiceView.Visibility = Visibility.Visible;
         }
 
         private void AddNewClient_Click(object sender, RoutedEventArgs e)
@@ -190,19 +204,15 @@ namespace MCS_Software
 
         private void SaveBookingButton_Click(object sender, RoutedEventArgs e)
         {
-            if (SelectedClient == null)
-                return;
+            viewModel.CurrentBooking.ClientId = SelectedClient.Id;
+            viewModel.CurrentBooking.StartDate = BookingStartDatePicker.SelectedDate ?? DateTime.MinValue;
+            viewModel.CurrentBooking.EndDate = BookingEndDatePicker.SelectedDate ?? DateTime.MinValue;
+            viewModel.CurrentBooking.Destination = BookingPlaceTextBox.Text;
+            viewModel.CurrentBooking.Notes = BookingNotesTextBox.Text;
 
-            Booking booking = new Booking
-            {
-                ClientId = SelectedClient.Id,
-                StartDate = BookingStartDatePicker.SelectedDate ?? DateTime.MinValue,
-                EndDate = BookingEndDatePicker.SelectedDate ?? DateTime.MinValue,
-                Destination = BookingPlaceTextBox.Text,
-                Notes = BookingNotesTextBox.Text
-            };
+            bookingServices.AddBooking(viewModel.CurrentBooking);
 
-            bookingServices.AddBooking(booking);
+            ShowDocumentChoiceState();
         }
 
         private void CancelBookingButton_Click(object sender, RoutedEventArgs e)
@@ -246,6 +256,21 @@ namespace MCS_Software
                 return;
 
             viewModel.CurrentBooking.Passengers.Remove(passenger);
+        }
+
+        private void AgreementCard_Click(object sender, MouseButtonEventArgs e)
+        {
+            // ShowAgreementForm(); — hook this up later
+        }
+
+        private void VoucherCard_Click(object sender, MouseButtonEventArgs e)
+        {
+            // ShowVoucherForm(); — hook this up later
+        }
+
+        private void InvoiceCard_Click(object sender, MouseButtonEventArgs e)
+        {
+            // ShowInvoiceForm(); — hook this up later
         }
     }
 }

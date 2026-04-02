@@ -43,6 +43,10 @@
                 <StackPanel Grid.Column="1"
                             Orientation="Horizontal"
                             VerticalAlignment="Center">
+                    <Button Content="Booking"
+                            Width="90"
+                            Height="34"
+                            Margin="0,0,10,0"/>
                     <Button Content="Refresh"
                             Width="90"
                             Height="34"
@@ -128,6 +132,139 @@
 
             <!-- right side -->
             <Grid Grid.Column="2">
+                
+                <!-- DOCUMENT PANEL CHOICE STATEOR WHATEVETHEFUCK -->
+                <Border x:Name="DocumentChoiceView"
+        Background="White"
+        CornerRadius="10"
+        Padding="18"
+        Visibility="Visible">
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="8"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Header -->
+                        <StackPanel Grid.Row="0">
+                            <TextBlock Text="Create Document"
+                       FontSize="24"
+                       FontWeight="Bold"
+                       Foreground="#1F2937"/>
+                            <TextBlock Text="Select the type of document you want to create."
+                       FontSize="13"
+                       Foreground="#6B7280"
+                       Margin="0,6,0,0"/>
+                        </StackPanel>
+
+                        <!-- Document type picker -->
+                        <Border Grid.Row="2"
+                BorderBrush="#E5E7EB"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="16"
+                Background="#F9FAFB">
+                            <StackPanel>
+                                <TextBlock Text="Document Type"
+                           FontSize="14"
+                           FontWeight="SemiBold"
+                           Foreground="#374151"
+                           Margin="0,0,0,12"/>
+
+                                <UniformGrid Columns="3" Rows="1">
+
+                                    <Border x:Name="AgreementCard"
+                            Margin="0,0,10,0"
+                            CornerRadius="8"
+                            BorderBrush="#E5E7EB"
+                            BorderThickness="2"
+                            Background="White"
+                            Padding="20"
+                            Cursor="Hand"
+                            MouseLeftButtonUp="AgreementCard_Click">
+                                        <StackPanel HorizontalAlignment="Center">
+                                            <TextBlock Text="📄"
+                                       FontSize="32"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,0,0,10"/>
+                                            <TextBlock Text="Agreement"
+                                       FontSize="16"
+                                       FontWeight="Bold"
+                                       HorizontalAlignment="Center"
+                                       Foreground="#1F2937"/>
+                                            <TextBlock Text="Client agreement document"
+                                       FontSize="12"
+                                       Foreground="#6B7280"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,4,0,0"
+                                       TextAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <Border x:Name="VoucherCard"
+                            Margin="0,0,10,0"
+                            CornerRadius="8"
+                            BorderBrush="#E5E7EB"
+                            BorderThickness="2"
+                            Background="White"
+                            Padding="20"
+                            Cursor="Hand"
+                            MouseLeftButtonUp="VoucherCard_Click">
+                                        <StackPanel HorizontalAlignment="Center">
+                                            <TextBlock Text="🎫"
+                                       FontSize="32"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,0,0,10"/>
+                                            <TextBlock Text="Voucher"
+                                       FontSize="16"
+                                       FontWeight="Bold"
+                                       HorizontalAlignment="Center"
+                                       Foreground="#1F2937"/>
+                                            <TextBlock Text="Travel voucher document"
+                                       FontSize="12"
+                                       Foreground="#6B7280"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,4,0,0"
+                                       TextAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <Border x:Name="InvoiceCard"
+                            CornerRadius="8"
+                            BorderBrush="#E5E7EB"
+                            BorderThickness="2"
+                            Background="White"
+                            Padding="20"
+                            Cursor="Hand"
+                            MouseLeftButtonUp="InvoiceCard_Click">
+                                        <StackPanel HorizontalAlignment="Center">
+                                            <TextBlock Text="🧾"
+                                       FontSize="32"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,0,0,10"/>
+                                            <TextBlock Text="Invoice"
+                                       FontSize="16"
+                                       FontWeight="Bold"
+                                       HorizontalAlignment="Center"
+                                       Foreground="#1F2937"/>
+                                            <TextBlock Text="Payment invoice document"
+                                       FontSize="12"
+                                       Foreground="#6B7280"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,4,0,0"
+                                       TextAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                </UniformGrid>
+                            </StackPanel>
+                        </Border>
+
+                    </Grid>
+                </Border>
 
                 <!-- booking panel -->
                 <Border x:Name="BookingPanel" 
@@ -136,6 +273,7 @@
                     Padding="18"
                     Visibility="Collapsed">
 
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -274,23 +412,31 @@
                      Grid.Row="6"
                      Grid.Column="1"
                      Height="34"/>
+                                    <TextBlock Grid.Row="8"
+                              Grid.Column="0"
+                              Text="Type of Stay:"
+                              VerticalAlignment="Center"/>
+                                    <TextBox x:Name="BookingPlaceTypeTextBox"
+                                Grid.Row="8"
+                                Grid.Column="1"
+                                Height="34"/>
 
-                                <TextBlock Grid.Row="8"
+                                    <TextBlock Grid.Row="10"
                        Grid.Column="0"
                        Text="Total Price:"
                        VerticalAlignment="Center"/>
                                 <TextBox x:Name="BookingTotalPriceTextBox"
-                     Grid.Row="8"
+                     Grid.Row="10"
                      Grid.Column="1"
                      Height="34"/>
 
-                                <TextBlock Grid.Row="10"
+                                <TextBlock Grid.Row="12"
                        Grid.Column="0"
                        Text="Notes:"
                        VerticalAlignment="Top"
                        Margin="0,6,0,0"/>
                                 <TextBox x:Name="BookingNotesTextBox"
-                     Grid.Row="10"
+                     Grid.Row="12"
                      Grid.Column="1"
                      Height="90"
                      AcceptsReturn="True"
@@ -300,181 +446,176 @@
                         </Border>
 
                         <!-- PASSENGERS -->
-                        <Border Grid.Row="6"
-                            Padding="16"
-                            CornerRadius="8"
-                            Background="White"
-                            BorderBrush="#DDDDDD"
-                            BorderThickness="1">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="14"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="14"/>
-                                    <RowDefinition Height="*"/>
-                                </Grid.RowDefinitions>
-
-                                <TextBlock Grid.Row="0"
-                       Text="Passengers"
-                       FontSize="18"
-                       FontWeight="Bold"/>
-
-                                <!-- Add passenger form -->
-                                <Grid Grid.Row="2">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="141*"/>
-                                        <ColumnDefinition Width="46*"/>
-                                        <ColumnDefinition Width="14"/>
-                                        <ColumnDefinition Width="220"/>
-                                        <ColumnDefinition Width="14"/>
-                                        <ColumnDefinition Width="120"/>
-                                    </Grid.ColumnDefinitions>
-
+                            <!-- PASSENGERS -->
+                            <Border Grid.Row="6"
+                                Padding="16"
+                                CornerRadius="8"
+                                Background="White"
+                                BorderBrush="#DDDDDD"
+                                BorderThickness="1">
+                                <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="8"/>
+                                        <RowDefinition Height="14"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="14"/>
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
 
                                     <TextBlock Grid.Row="0"
-                           Grid.Column="0"
-                           Text="Full Name" Grid.ColumnSpan="2" Margin="0,0,0,8" Grid.RowSpan="2"/>
-                                    <TextBlock Grid.Row="0"
-                           Grid.Column="3"
-                           Text="Passport ID" Margin="0,0,0,8" Grid.RowSpan="2"/>
+                   Text="Passengers"
+                   FontSize="18"
+                   FontWeight="Bold"/>
 
-                                    <TextBox x:Name="PassengerFullNameTextBox"
-                         Grid.Row="2"
-                         Grid.Column="0"
-                         Height="34" Grid.ColumnSpan="2"/>
+                                    <!-- Add passenger form -->
+                                    <Grid Grid.Row="2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="16"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="16"/>
+                                            <ColumnDefinition Width="120"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="6"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
 
-                                    <TextBox x:Name="PassengerPassportTextBox"
-                         Grid.Row="2"
-                         Grid.Column="3"
-                         Height="34"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Full Name" Margin="0,0,0,4"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="2" Text="Passport ID" Margin="0,0,0,4"/>
 
-                                    <Button x:Name="AddPassengerButton"
-                        Grid.Row="2"
-                        Grid.Column="5"
-                        Height="34"
-                        Click="AddPassengerButton_Click"/>
-                                </Grid>
-
-                                <!-- Passenger list -->
-                                <Grid Grid.Row="4">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="8"/>
-                                        <RowDefinition Height="*"/>
-                                    </Grid.RowDefinitions>
-
-                                    <TextBlock Grid.Row="0"
-                           Text="Added Passengers"
-                           FontWeight="SemiBold"/>
-
-                                    <Border Grid.Row="2"
-                        BorderBrush="#DDDDDD"
-                        BorderThickness="1"
-                        CornerRadius="6"
-                        Padding="6">
-                                        <Grid>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="6"/>
-                                                <RowDefinition Height="*"/>
-                                            </Grid.RowDefinitions>
-
-                                            <!-- Optional column header -->
-                                            <Grid Grid.Row="0">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="*"/>
-                                                    <ColumnDefinition Width="200"/>
-                                                </Grid.ColumnDefinitions>
-
-                                                <TextBlock Grid.Column="0"
-                                       Text="Full Name"
-                                       FontWeight="SemiBold"/>
-                                                <TextBlock Grid.Column="1"
-                                       Text="Passport ID"
-                                       FontWeight="SemiBold"/>
-                                            </Grid>
-
-                                            <ListBox x:Name="PassengerListBox"
+                                        <TextBox x:Name="PassengerFullNameTextBox"
                                              Grid.Row="2"
-                                             BorderThickness="0"
-                                             Background="Transparent"
-                                             ItemsSource="{Binding CurrentBooking.Passengers}">
-                                                <ListBox.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <Border BorderBrush="#DDDDDD"
-                                                                    BorderThickness="1"
-                                                                    CornerRadius="6"
-                                                                    Padding="10"
-                                                                    Margin="0,0,0,8">
-                                                            <Grid>
-                                                                <Grid.ColumnDefinitions>
-                                                                    <ColumnDefinition Width="*"/>
-                                                                    <ColumnDefinition Width="14"/>
-                                                                    <ColumnDefinition Width="220"/>
-                                                                    <ColumnDefinition Width="14"/>
-                                                                    <ColumnDefinition Width="100"/>
-                                                                </Grid.ColumnDefinitions>
+                                             Grid.Column="0"
+                                             Height="34"/>
 
-                                                                <Grid.RowDefinitions>
-                                                                    <RowDefinition Height="Auto"/>
-                                                                    <RowDefinition Height="8"/>
-                                                                    <RowDefinition Height="Auto"/>
-                                                                </Grid.RowDefinitions>
+                                        <TextBox x:Name="PassengerPassportTextBox"
+                                             Grid.Row="2"
+                                             Grid.Column="2"
+                                             Height="34"/>
 
-                                                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Full Name"/>
-                                                                <TextBlock Grid.Row="0" Grid.Column="2" Text="Passport ID"/>
+                                        <Button x:Name="AddPassengerButton"
+                                            Grid.Row="2"
+                                            Grid.Column="4"
+                                            Height="34"
+                                            Content="Add Passenger"
+                                            Click="AddPassengerButton_Click"/>
+                                    </Grid>
 
-                                                                <TextBox Grid.Row="2"
-                                                                 Grid.Column="0"
-                                                                 Height="34"
-                                                                 Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <!-- Passenger list -->
+                                    <Grid Grid.Row="4">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="8"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
 
-                                                                <TextBox Grid.Row="2"
-                                                                 Grid.Column="2"
-                                                                 Height="34"
-                                                                 Text="{Binding PassportId, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBlock Grid.Row="0"
+                                           Text="Added Passengers"
+                                           FontWeight="SemiBold"/>
 
-                                                                <Button Grid.Row="2"
-                                                                    Grid.Column="4"
-                                                                    Height="34"
-                                                                    Content="Remove"
-                                                                    Click="RemovePassengerButton_Click"/>
-                                                            </Grid>
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </ListBox.ItemTemplate>
-                                            </ListBox>
-                                        </Grid>
-                                    </Border>
+                                        <Border Grid.Row="2"
+                                            BorderBrush="#DDDDDD"
+                                            BorderThickness="1"
+                                            CornerRadius="6"
+                                            Padding="8">
+                                            <StackPanel>
+                                                <!-- Column headers -->
+                                                <Grid Margin="10,4,10,8">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="16"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="16"/>
+                                                        <ColumnDefinition Width="90"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Grid.Column="0" Text="Full Name" FontWeight="SemiBold" Foreground="#6B7280"/>
+                                                    <TextBlock Grid.Column="2" Text="Passport ID" FontWeight="SemiBold" Foreground="#6B7280"/>
+                                                </Grid>
+
+                                                <ListBox x:Name="PassengerListBox"
+                             BorderThickness="0"
+                             Background="Transparent"
+                             HorizontalContentAlignment="Stretch"
+                             ItemsSource="{Binding CurrentBooking.Passengers}">
+                                                    <ListBox.ItemContainerStyle>
+                                                        <Style TargetType="ListBoxItem">
+                                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                                            <Setter Property="Padding" Value="0"/>
+                                                            <Setter Property="Margin" Value="0"/>
+                                                            <Setter Property="Background" Value="Transparent"/>
+                                                            <Setter Property="Template">
+                                                                <Setter.Value>
+                                                                    <ControlTemplate TargetType="ListBoxItem">
+                                                                        <ContentPresenter/>
+                                                                    </ControlTemplate>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </Style>
+                                                    </ListBox.ItemContainerStyle>
+                                                    <ListBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Border BorderBrush="#E5E7EB"
+                                        BorderThickness="1"
+                                        CornerRadius="6"
+                                        Padding="10"
+                                        Margin="0,0,0,6"
+                                        Background="#F9FAFB">
+                                                                <Grid>
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="*"/>
+                                                                        <ColumnDefinition Width="16"/>
+                                                                        <ColumnDefinition Width="*"/>
+                                                                        <ColumnDefinition Width="16"/>
+                                                                        <ColumnDefinition Width="90"/>
+                                                                    </Grid.ColumnDefinitions>
+
+                                                                    <TextBox Grid.Column="0"
+                                                 Height="34"
+                                                 VerticalContentAlignment="Center"
+                                                 Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                                    <TextBox Grid.Column="2"
+                                                 Height="34"
+                                                 VerticalContentAlignment="Center"
+                                                 Text="{Binding PassportId, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                                                    <Button Grid.Column="4"
+                                                Height="34"
+                                                Content="Remove"
+                                                Click="RemovePassengerButton_Click"/>
+                                                                </Grid>
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </ListBox.ItemTemplate>
+                                                </ListBox>
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
                                 </Grid>
-                            </Grid>
-                        </Border>
+                            </Border>
 
-                        <!-- ACTION BUTTONS -->
+                            <!-- ACTION BUTTONS -->
                         <StackPanel Grid.Row="8"
-                Orientation="Horizontal"
-                HorizontalAlignment="Right">
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Right">
                             <Button x:Name="CancelBookingButton"
-                Content="Cancel"
-                Width="120"
-                Height="36"
-                Margin="0,0,12,0"
-                Click="CancelBookingButton_Click"/>
+                                Content="Cancel"
+                                Width="120"
+                                Height="36"
+                                Margin="0,0,12,0"
+                                Click="CancelBookingButton_Click"/>
 
                             <Button x:Name="SaveBookingButton"
-                Content="Save Booking"
-                Width="140"
-                Height="36"
-                Click="SaveBookingButton_Click"/>
+                                Content="Save Booking"
+                                Width="140"
+                                Height="36"
+                                Click="SaveBookingButton_Click"/>
                         </StackPanel>
-
+                        
                     </Grid>
+                    </ScrollViewer>
                 </Border>
 
                 <!-- no CLIENTS VIEW FROM HERE -->
@@ -674,7 +815,7 @@
                     Background="White"
                     CornerRadius="10"
                     Padding="18"
-                    Visibility="Visible"
+                    Visibility="Collapsed"
                         >
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <Border Background="White" Padding="10">
@@ -741,11 +882,11 @@
                                             Margin="0,0,10,0"
                                             Click="CancelAddNewClient_Click"/>
                                         <Button x:Name="SaveClientButton"
-                                                Content="Save Client"
+                                            Content="Save Client"
                                             Width="120"
                                             Height="36"
                                             FontWeight="SemiBold"
-                                                Click="SaveNewClient_Click"/>
+                                            Click="SaveNewClient_Click"/>
                                     </StackPanel>
                                 </Grid>
                             </Grid>
