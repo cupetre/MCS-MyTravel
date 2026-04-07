@@ -55,6 +55,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Document\BaseDocument.cs" />
+    <Compile Include="Document\Agreement.cs" />
+    <Compile Include="Document\Invoice.cs" />
+    <Compile Include="Document\Voucher.cs" />
+    <Compile Include="Payments\TotalPrice.cs" />
     <Compile Include="Services\BookingServices.cs" />
     <Compile Include="Services\ClientServices.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />

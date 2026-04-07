@@ -138,7 +138,7 @@
         Background="White"
         CornerRadius="10"
         Padding="18"
-        Visibility="Visible">
+        Visibility="Collapsed">
 
                     <Grid>
                         <Grid.RowDefinitions>
@@ -271,7 +271,7 @@
                     Background="White"
                     CornerRadius="10"
                     Padding="18"
-                    Visibility="Collapsed">
+                    Visibility="Visible">
 
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <Grid>
@@ -353,11 +353,11 @@
 
                         <!-- BOOKING FORM -->
                         <Border Grid.Row="4"
-            Padding="16"
-            CornerRadius="8"
-            Background="White"
-            BorderBrush="#DDDDDD"
-            BorderThickness="1">
+                            Padding="16"
+                            CornerRadius="8"
+                            Background="White"
+                            BorderBrush="#DDDDDD"
+                            BorderThickness="1">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="170"/>
@@ -375,8 +375,10 @@
                                     <RowDefinition Height="12"/>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="12"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
+                                     <RowDefinition Height="Auto"/>
+                                     <RowDefinition Height="12"/>
+                                     <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
 
                                 <TextBlock Grid.Row="0"
                        Grid.Column="0"

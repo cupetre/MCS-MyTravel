@@ -21,5 +21,7 @@ namespace MCS_Software.ViewModel
                     Passengers = new ObservableCollection<Passenger>()
                 };
         }
+
+        
     }
 }

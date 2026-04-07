@@ -14,9 +14,36 @@ namespace MCS_Software.Models
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string Destination { get; set; }
-        public decimal TotalPrice { get; set; }
-        public ObservableCollection<Passenger> Passengers { get; set; } = new ObservableCollection<Passenger>();
         public string Status { get; set; }   // Draft, Active, Completed, Cancelled
         public string Notes { get; set; }
+
+        public decimal HotelPrice { get; set; }
+        public bool IncludeTravelPrice { get; set; }
+        public decimal TravelPrice { get; set; }
+        public bool IncludeInsurancePrice { get; set; }
+        public decimal InsurancePrice { get; set; }
+        public bool IncludeTaxesPrice { get; set; }
+        public decimal TaxesPrice { get; set; }
+
+        public ObservableCollection<Passenger> Passengers { get; set; } = new ObservableCollection<Passenger>();
+
+        public decimal TotalPrice
+        {
+            get
+            {
+                decimal total = HotelPrice;
+
+                if (IncludeTravelPrice)
+                    total += TravelPrice;
+
+                if (IncludeInsurancePrice)
+                    total += InsurancePrice;
+
+                if (IncludeTaxesPrice)
+                    total += TaxesPrice;
+
+                return total;
+            }
+        }
     }
 }

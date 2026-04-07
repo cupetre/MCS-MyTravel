@@ -8,7 +8,7 @@ namespace MCS_Software.Models
 {
     internal class DocumentType
     {
-        public int id {  get; set; }
+        public int Id {  get; set; }
         public string Name { get; set; }
     }
 }
