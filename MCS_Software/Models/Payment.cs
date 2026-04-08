@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace MCS_Software.Models
 {
-    internal class Payment
+    public class Payment
     {
         public int Id { get; set; }
         public decimal Amount { get; set; }
         public DateTime PaymentDate { get; set; }
-        public string PaymentType {  get; set; }
+        // public string PaymentType {  get; set; }
         public string Notes { get; set; }
     }
 }

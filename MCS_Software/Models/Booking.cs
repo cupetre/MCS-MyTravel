@@ -26,7 +26,7 @@ namespace MCS_Software.Models
         public decimal TaxesPrice { get; set; }
 
         public ObservableCollection<Passenger> Passengers { get; set; } = new ObservableCollection<Passenger>();
-
+        public ObservableCollection<Payment> Payments { get; set; } = new ObservableCollection<Payment>();
         public decimal TotalPrice
         {
             get

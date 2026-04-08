@@ -9,8 +9,8 @@ namespace MCS_Software.Models
     public class Passenger
     {
         public int Id {  get; set; }
-        public string Name {  get; set; }
-        public int BookingID {  get; set; }
-        public string PassportID {  get; set; }
+        public string FullName {  get; set; }
+        public int BookingId {  get; set; }
+        public string PassportId {  get; set; }
     }
 }
