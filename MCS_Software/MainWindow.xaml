@@ -625,7 +625,7 @@
                     Background="White"
                     CornerRadius="10"
                     Padding="18"
-                    Visibility="Visible">
+                    Visibility="Collapsed">
 
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <Grid>
@@ -940,8 +940,6 @@
                                 </Grid>
                             </Border>
                         </Grid>
-                        
-                        
                     </ScrollViewer>
                 </Border>
 
@@ -983,7 +981,7 @@
                     Background="White"
                     CornerRadius="10"
                     Padding="18"
-                        Visibility="Collapsed">
+                        Visibility="Visible">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -1072,12 +1070,12 @@
                                     </Grid.RowDefinitions>
 
                                     <TextBlock Grid.Row="0"
-                                   Grid.Column="0"
-                                   Grid.ColumnSpan="2"
-                                   Text="Client Information"
-                                   FontSize="18"
-                                   FontWeight="Bold"
-                                   Margin="0,0,0,6"/>
+                                       Grid.Column="0"
+                                       Grid.ColumnSpan="2"
+                                       Text="Client Information"
+                                       FontSize="18"
+                                       FontWeight="Bold"
+                                       Margin="0,0,0,6"/>
 
                                     <TextBlock Grid.Row="2" Grid.Column="0" Text="Full Name:" VerticalAlignment="Center"/>
                                     <TextBox Grid.Row="2" Grid.Column="1" Height="34" x:Name="FullNameBox" IsEnabled="False"/>
@@ -1098,44 +1096,173 @@
 
                             <!-- Document history -->
                             <Border Grid.Row="6"
-                        Background="#FFFFFF"
-                        BorderBrush="#E5E7EB"
-                        BorderThickness="1"
-                        CornerRadius="8"
-                        Padding="16">
+                                    Background="#FFFFFF"
+                                    BorderBrush="#E5E7EB"
+                                    BorderThickness="1"
+                                    CornerRadius="8"
+                                    Padding="16">
                                 <StackPanel>
                                     <TextBlock Text="Client Document History"
-                                   FontSize="18"
-                                   FontWeight="Bold"
-                                   Margin="0,0,0,12"/>
+                                       FontSize="18"
+                                       FontWeight="Bold"
+                                       Margin="0,0,0,12"/>
 
                                     <Border Background="#F9FAFB"
-                                CornerRadius="6"
-                                Padding="12"
-                                BorderBrush="#E5E7EB"
-                                BorderThickness="1"
-                                Margin="0,0,0,10">
+                                        CornerRadius="6"
+                                        Padding="12"
+                                        BorderBrush="#E5E7EB"
+                                        BorderThickness="1"
+                                        Margin="0,0,0,10">
                                         <TextBlock Text="Invoice #INV-2026-001"/>
                                     </Border>
 
                                     <Border Background="#F9FAFB"
-                                CornerRadius="6"
-                                Padding="12"
-                                BorderBrush="#E5E7EB"
-                                BorderThickness="1"
-                                Margin="0,0,0,10">
+                                        CornerRadius="6"
+                                        Padding="12"
+                                        BorderBrush="#E5E7EB"
+                                        BorderThickness="1"
+                                        Margin="0,0,0,10">
                                         <TextBlock Text="Contract #CON-2026-004"/>
                                     </Border>
 
                                     <Border Background="#F9FAFB"
-                                CornerRadius="6"
-                                Padding="12"
-                                BorderBrush="#E5E7EB"
-                                BorderThickness="1">
+                                        CornerRadius="6"
+                                        Padding="12"
+                                        BorderBrush="#E5E7EB"
+                                        BorderThickness="1">
                                         <TextBlock Text="Offer #OFF-2026-002"/>
                                     </Border>
                                 </StackPanel>
                             </Border>
+
+                            <!-- Payment History -->
+                            <Border Grid.Row="8"
+                                Background="#FFFFFF"
+                                BorderBrush="#E5E7EB"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="16">
+                                <StackPanel>
+
+                                    <!-- Header row -->
+                                    <Grid Margin="0,0,0,14">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Text="Payment History"
+                                           FontSize="18"
+                                           FontWeight="Bold"
+                                           VerticalAlignment="Center"/>
+
+                                        <Button Grid.Column="1"
+                                            Content="+ Add Payment"
+                                            Width="120"
+                                            Height="32"
+                                            Click="AddPaymentFromClientView_Click"/>
+                                    </Grid>
+
+                                    <!-- Column headers -->
+                                    <Border Background="#F3F4F6"
+                                        CornerRadius="6"
+                                        Padding="12,8"
+                                        Margin="0,0,0,6">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="80"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="120"/>
+                                                <ColumnDefinition Width="100"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock Grid.Column="0" Text="ID"
+                           FontWeight="SemiBold"
+                           Foreground="#6B7280"
+                           FontSize="12"/>
+                                            <TextBlock Grid.Column="1" Text="Date"
+                           FontWeight="SemiBold"
+                           Foreground="#6B7280"
+                           FontSize="12"/>
+                                            <TextBlock Grid.Column="2" Text="Amount"
+                           FontWeight="SemiBold"
+                           Foreground="#6B7280"
+                           FontSize="12"/>
+                                            <TextBlock Grid.Column="3" Text="Note"
+                           FontWeight="SemiBold"
+                           Foreground="#6B7280"
+                           FontSize="12"/>
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- Payment list -->
+                                    <ListBox x:Name="PaymentHistoryList"
+                 BorderThickness="0"
+                 Background="Transparent"
+                 ItemsSource="{Binding CurrentBooking.Payments}">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Background="#F9FAFB"
+                            BorderBrush="#E5E7EB"
+                            BorderThickness="1"
+                            CornerRadius="6"
+                            Padding="12,10"
+                            Margin="0,0,0,6"
+                            Cursor="Hand">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="80"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="120"/>
+                                                            <ColumnDefinition Width="100"/>
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <TextBlock Grid.Column="0"
+                                       Text="{Binding Id}"
+                                       Foreground="#6B7280"
+                                       FontSize="13"
+                                       VerticalAlignment="Center"/>
+
+                                                        <TextBlock Grid.Column="1"
+                                       Text="{Binding Date, StringFormat=dd/MM/yyyy}"
+                                       FontSize="13"
+                                       VerticalAlignment="Center"/>
+
+                                                        <TextBlock Grid.Column="2"
+                                       Text="{Binding Amount, StringFormat={}{0:F2}}"
+                                       FontSize="13"
+                                       FontWeight="SemiBold"
+                                       Foreground="#16A34A"
+                                       VerticalAlignment="Center"/>
+
+                                                        <TextBlock Grid.Column="3"
+                                       Text="{Binding Note}"
+                                       FontSize="13"
+                                       Foreground="#6B7280"
+                                       VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis"/>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+
+                                    <!-- Empty state -->
+                                    <Border x:Name="NoPaymentsPlaceholder"
+                Background="#F9FAFB"
+                BorderBrush="#E5E7EB"
+                BorderThickness="1"
+                CornerRadius="6"
+                Padding="20">
+                                        <TextBlock Text="No payments recorded yet."
+                       Foreground="#9CA3AF"
+                       HorizontalAlignment="Center"
+                       FontSize="13"/>
+                                    </Border>
+
+                                </StackPanel>
+                            </Border>
+                            
                         </Grid>
                     </ScrollViewer>
                 </Border>

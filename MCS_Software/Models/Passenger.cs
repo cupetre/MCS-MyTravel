@@ -10,7 +10,10 @@ namespace MCS_Software.Models
     {
         public int Id {  get; set; }
         public string FullName {  get; set; }
+        public DateTime BirthDate { get; set;  }
         public int BookingId {  get; set; }
         public string PassportId {  get; set; }
+
+        public Booking Booking { get; set; }
     }
 }

@@ -4,14 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MCS_Software.Document
+namespace MCS_Software.Models
 {
-    public class BaseDocument
+    public class Document
     {
         public int Id { get; set; }
+
         public int BookingId { get; set; }
-        public string DocumentType { get; set; }
+        public Booking Booking { get; set; } = null;
+
+        public DocumentType Type { get; set; }
         public DateTime DateCreated { get; set; }
+
+        public string DocumentNumber { get; set; } = string.Empty;
         public decimal TotalPrice { get; set; }
+        public string Notes { get; set; } = string.Empty;
     }
 }

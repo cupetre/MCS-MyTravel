@@ -26,8 +26,8 @@ namespace MCS_Software.Services
     public void UpdateClient(Client client, string fullName, string passportId, DateTime birthDate, string phone, string notes)
     {
         client.FullName = fullName;
-        client.PassportID = passportId;
-        client.Date = birthDate;
+        client.PassportId = passportId;
+        client.BirthDate = birthDate;
         client.Phone = phone;
         client.Notes = notes;
     }

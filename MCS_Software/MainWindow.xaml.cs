@@ -125,8 +125,8 @@ namespace MCS_Software
 
             FullNameBox.Text = SelectedClient.FullName;
             PhoneBox.Text = SelectedClient.Phone;
-            DateBirthBox.SelectedDate = SelectedClient.Date;
-            PassportBox.Text = SelectedClient.PassportID;
+            DateBirthBox.SelectedDate = SelectedClient.BirthDate;
+            PassportBox.Text = SelectedClient.PassportId;
             NotesBox.Text = SelectedClient.Notes;
 
             ClientNameHeader.Text = SelectedClient.FullName;
@@ -177,8 +177,8 @@ namespace MCS_Software
                 Id = viewModel.Clients.Count + 1,
                 FullName = NewFullName.Text,
                 Phone = NewPhone.Text,
-                PassportID = NewPassport.Text,
-                Date = NewDateBirth.SelectedDate ?? DateTime.MinValue,
+                PassportId = NewPassport.Text,
+                BirthDate = NewDateBirth.SelectedDate ?? DateTime.MinValue,
                 Notes = NewNotes.Text
             };
 
@@ -347,6 +347,11 @@ namespace MCS_Software
             PaymentNotesBox.Text = "";
 
             RecalculateTotal();
+        }
+
+        private void AddPaymentFromClientView_Click(object sender, RoutedEventArgs e)
+        {
+            ShowPaymentState();
         }
     }
 }

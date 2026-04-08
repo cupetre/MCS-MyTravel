@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace MCS_Software.Models
 {
-    internal class DocumentType
+    public enum DocumentType
     {
-        public int Id {  get; set; }
-        public string Name { get; set; }
+        Voucher = 0,
+        Invoice = 1,
+        Agreement = 2
     }
 }
