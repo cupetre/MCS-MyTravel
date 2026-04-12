@@ -7,7 +7,9 @@ using System.IO;
 using System.Windows;
 using MCS_MyTravel.Data;
 using Microsoft.EntityFrameworkCore;
-using MCS_MyTravel;
+using MCS_MyTravel.Repositories;
+using MCS_MyTravel.Services;
+using MCS_MyTravel.ViewModel;
 
 namespace MCS_MyTravel
 {
@@ -33,6 +35,10 @@ namespace MCS_MyTravel
                     services.AddDbContext<AppDbContext>(options =>
                         options.UseNpgsql(connectionString));
 
+                   
+                    services.AddScoped<IClientRepo, ClientRepo>();
+                    services.AddScoped<IClientServices, ClientServices>();
+                    services.AddScoped<MainViewModel>();
                     services.AddTransient<MainWindow>();
                 })
                 .Build();

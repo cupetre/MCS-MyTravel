@@ -2,9 +2,9 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using MCS_MyTravel.Models;
+using MCS_MyTravel.Repositories;
 using MCS_MyTravel.Services;
 using MCS_MyTravel.ViewModel;
-using MCS_Travel.Services;
 
 namespace MCS_MyTravel
 {
@@ -13,17 +13,14 @@ namespace MCS_MyTravel
     /// </summary>
     public partial class MainWindow : Window
     {
-        private MainViewModel viewModel;
+        private readonly MainViewModel viewModel;
 
         private BookingServices bookingServices = new BookingServices();
 
-        private ClientServices clientServices = new ClientServices();
-
-        public MainWindow()
+        public MainWindow(MainViewModel vm)
         {
             InitializeComponent();
-
-            viewModel = new MainViewModel();
+            viewModel = vm;
             DataContext = viewModel;
         }
 
@@ -99,15 +96,12 @@ namespace MCS_MyTravel
             PaymentsPanel.Visibility = Visibility.Visible;
         }
 
+        // this is just for viewing the state of adding a new client
         private void AddNewClient_Click(object sender, RoutedEventArgs e)
         {
             ShowAddNewClientView();
         }
 
-        private void CancelAddNewClient_Click(object sender, RoutedEventArgs e)
-        {
-            ShowNoClientSelectedView();
-        }
 
         private void ClientList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -132,25 +126,7 @@ namespace MCS_MyTravel
             SetEditingState(false);
         }
 
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (SelectedClient == null)
-                return;
-
-            clientServices.UpdateClient(
-                SelectedClient,
-                FullNameBox.Text,
-                PassportBox.Text,
-                DateBirthBox.SelectedDate ?? DateTime.MinValue,
-                PhoneBox.Text,
-                NotesBox.Text
-            );
-
-            ClientNameHeader.Text = SelectedClient.FullName;
-
-            SetEditingState(false);
-        }
-
+        // activating forms to be able to be EDITED on EXISTING CLIENT
         private void EditButton_Click(Object sender, RoutedEventArgs e)
         {
 
@@ -161,36 +137,24 @@ namespace MCS_MyTravel
 
             SetEditingState(true);
         }
-        private void SaveNewClient_Click(object sender, RoutedEventArgs e)
+
+        private void CancelAddNewClient_Click(Object sender, RoutedEventArgs e)
         {
-            // Basic validation
-            if (string.IsNullOrWhiteSpace(NewFullName.Text))
+            SetEditingState(false);
+        }
+
+        // Creating a new client from base / updating existing client
+        private async void SaveNewClient_Click(object sender, RoutedEventArgs e)
+        {
+            try
             {
-                MessageBox.Show("Please enter a full name.", "Validation");
-                return;
+                await viewModel.SaveClientAsync();
+                MessageBox.Show("Client saved successfully.");
             }
-
-            Client newClient = new Client
+            catch (Exception ex)
             {
-                Id = viewModel.Clients.Count + 1,
-                FullName = NewFullName.Text,
-                Phone = NewPhone.Text,
-                PassportId = NewPassport.Text,
-                BirthDate = NewDateBirth.SelectedDate ?? DateTime.MinValue,
-                Notes = NewNotes.Text
-            };
-
-            viewModel.Clients.Add(newClient);
-            clientServices.AddClient(newClient);
-
-            // Clear the form
-            NewFullName.Text = "";
-            NewPhone.Text = "";
-            NewPassport.Text = "";
-            NewDateBirth.SelectedDate = null;
-            NewNotes.Text = "";
-
-            ClientList.SelectedItem = newClient;
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
             ShowBookingView();
         }
 
@@ -244,7 +208,7 @@ namespace MCS_MyTravel
             PassportBox.IsEnabled = isEditing;
 
             EditButton.IsEnabled = !isEditing;
-            SaveButton.IsEnabled = isEditing;
+            SaveChangesButton.IsEnabled = isEditing;
         }
 
         private void AddPassengerButton_Click(Object sender, RoutedEventArgs e)

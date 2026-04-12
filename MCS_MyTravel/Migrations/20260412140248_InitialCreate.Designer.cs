@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MCS_MyTravel.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260411215921_InitialCreateTwo")]
-    partial class InitialCreateTwo
+    [Migration("20260412140248_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
