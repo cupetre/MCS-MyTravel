@@ -87,16 +87,15 @@ namespace MCS_MyTravel.Services
 
         }
 
-        private static void ValidateClient(Client client)
+        private static string? ValidateClient(Client client)
         {
-            if (client == null)
-                throw new ArgumentNullException(nameof(client));
-
             if (string.IsNullOrWhiteSpace(client.FullName))
-                throw new InvalidOperationException("Full name is required.");
+                return "Full name is required.";
 
             if (string.IsNullOrWhiteSpace(client.PassportId))
-                throw new InvalidOperationException("Passport ID is required.");
+                return "Passport ID is required.";
+
+            return null;
         }
     }
 }

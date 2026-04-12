@@ -23,11 +23,7 @@ namespace MCS_MyTravel
             viewModel = vm;
             DataContext = viewModel;
         }
-
-        private Client? SelectedClient
-        {
-            get { return ClientList.SelectedItem as Client; }
-        }
+        private Client? SelectedClient => ClientList.SelectedItem as Client;
 
         /* private Booking SelectedBooking
         {
@@ -102,6 +98,17 @@ namespace MCS_MyTravel
             ShowAddNewClientView();
         }
 
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                await viewModel.LoadClientsAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error loading clients", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
 
         private void ClientList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -115,11 +122,15 @@ namespace MCS_MyTravel
 
             ShowSelectedClientView();
 
-            FullNameBox.Text = SelectedClient.FullName;
-            PhoneBox.Text = SelectedClient.Phone;
-            DateBirthBox.SelectedDate = SelectedClient.BirthDate;
-            PassportBox.Text = SelectedClient.PassportId;
-            NotesBox.Text = SelectedClient.Notes;
+            viewModel.CurrentClient = new Client
+            {
+                Id = SelectedClient.Id,
+                FullName = SelectedClient.FullName,
+                BirthDate = SelectedClient.BirthDate,
+                Phone = SelectedClient.Phone,
+                PassportId = SelectedClient.PassportId,
+                Notes = SelectedClient.Notes
+            };
 
             ClientNameHeader.Text = SelectedClient.FullName;
 
@@ -155,6 +166,7 @@ namespace MCS_MyTravel
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+
             ShowBookingView();
         }
 

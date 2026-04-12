@@ -1,24 +1,37 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using MCS_MyTravel.Models;
 using MCS_MyTravel.Services;
 
 namespace MCS_MyTravel.ViewModel
 {
-    public class MainViewModel
+    public class MainViewModel : INotifyPropertyChanged
     {
         private readonly IClientServices _clientServices;
-
-        public ObservableCollection<Client> Clients { get; set; } = new();
-        public Client CurrentClient { get; set; } = new Client();
 
         public Booking CurrentBooking { get; set; }
         public ObservableCollection<Booking> Bookings { get; set; }
 
+        public ObservableCollection<Client> Clients { get; set; } = new();
+        public Client _currentClient { get; set; } = new Client();
+
+        public Client CurrentClient
+        {
+            get => _currentClient;
+
+            set
+            {
+                _currentClient = value;
+                OnPropertyChanged();
+            }
+        }
         public MainViewModel(IClientServices clientServices)
         {
             _clientServices = clientServices;
 
             CurrentClient = new Client();
+
             CurrentBooking = new Booking();
             Bookings = new ObservableCollection<Booking>();
         }
@@ -46,7 +59,15 @@ namespace MCS_MyTravel.ViewModel
             }
 
             await LoadClientsAsync();
+
             CurrentClient = new Client();
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

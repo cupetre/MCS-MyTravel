@@ -33,7 +33,7 @@ namespace MCS_MyTravel.Repositories
         public async Task<List<Client>> GetAllClientsAsync()
         {
             return await _context.Clients
-                .OrderBy(c => c.FullName)
+                .OrderBy(c => c.Id)
                 .ToListAsync();
         }
 
