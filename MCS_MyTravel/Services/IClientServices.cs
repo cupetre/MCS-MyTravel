@@ -13,6 +13,6 @@ namespace MCS_MyTravel.Services
         Task<Client?> GetClientByIdAsync(int id);
         Task<Client> CreateClientAsync(Client client);
         Task<Client> UpdateClientAsync(Client client);
-        Task RemoveClientASync(int id);
+        Task RemoveClientAsync(int id);
     }
 }

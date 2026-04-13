@@ -274,7 +274,7 @@
                     Background="White"
                     CornerRadius="10"
                     Padding="18"
-                    Visibility="Collapsed">
+                    Visibility="Visible">
 
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <Grid>
@@ -363,90 +363,90 @@
                             BorderThickness="1">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="170"/>
+                                        <ColumnDefinition Width="160"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="12"/>
                                         <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="12"/>
                                         <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="12"/>
                                         <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="12"/>
                                         <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="12"/>
                                         <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="12"/>
+                                        <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
 
                                     <TextBlock Grid.Row="0"
-                       Grid.Column="0"
-                       Grid.ColumnSpan="2"
-                       Text="Booking Information"
-                       FontSize="18"
-                       FontWeight="Bold"
-                       Margin="0,0,0,6"/>
+                                       Grid.Column="0"
+                                       Grid.ColumnSpan="2"
+                                       Text="Booking Information"
+                                       FontSize="18"
+                                       FontWeight="Bold"
+                                       Margin="0,0,0,6"/>
+
+                                    <TextBlock Grid.Row="1"
+                                       Grid.Column="0"
+                                       Text="Start Date:"
+                                       VerticalAlignment="Center"
+                                       Margin="0,6,0,0"/>
+                                    <DatePicker x:Name="BookingStartDatePicker"
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        Height="34"
+                                        Margin="0,6,0,0"
+                                                SelectedDate="{Binding CurrentBooking.StartDate, UpdateSourceTrigger=PropertyChanged}"/>
 
                                     <TextBlock Grid.Row="2"
-                       Grid.Column="0"
-                       Text="Start Date:"
-                       VerticalAlignment="Center"/>
-                                    <DatePicker x:Name="BookingStartDatePicker"
+                                       Grid.Column="0"
+                                       Text="End Date:"
+                                       VerticalAlignment="Center"
+                                               Margin="0,6,0,0"/>
+                                    <DatePicker x:Name="BookingEndDatePicker"
                         Grid.Row="2"
                         Grid.Column="1"
-                        Height="34"/>
+                        Height="34"
+                                                Margin="0,6,0,0"
+                                                SelectedDate="{Binding CurrentBooking.EndDate, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                    <TextBlock Grid.Row="4"
-                       Grid.Column="0"
-                       Text="End Date:"
-                       VerticalAlignment="Center"/>
-                                    <DatePicker x:Name="BookingEndDatePicker"
-                        Grid.Row="4"
-                        Grid.Column="1"
-                        Height="34"/>
-
-                                    <TextBlock Grid.Row="6"
+                                    <TextBlock Grid.Row="3"
                        Grid.Column="0"
                        Text="Place of Stay:"
-                       VerticalAlignment="Center"/>
+                       VerticalAlignment="Center"
+                                               Margin="0,6,0,0"/>
                                     <TextBox x:Name="BookingPlaceTextBox"
-                     Grid.Row="6"
+                     Grid.Row="3"
                      Grid.Column="1"
-                     Height="34"/>
-                                    <TextBlock Grid.Row="8"
+                     Height="34"
+                                             Margin="0,6,0,0"
+                                             Text="{Binding CurrentBooking.Destination, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBlock Grid.Row="4"
                               Grid.Column="0"
                               Text="Type of Stay:"
-                              VerticalAlignment="Center"/>
+                              VerticalAlignment="Center"
+                                               Margin="0,6,0,0"/>
                                     <TextBox x:Name="BookingPlaceTypeTextBox"
-                                Grid.Row="8"
+                                Grid.Row="4"
                                 Grid.Column="1"
-                                Height="34"/>
+                                Height="34"
+                                             Margin="0,6,0,0"
+                                             Text="{Binding CurrentBooking.PlaceType, UpdateSourceTrigger=PropertyChanged}"/>
 
-                                    <TextBlock Grid.Row="10"
-                       Grid.Column="0"
-                       Text="Total Price:"
-                       VerticalAlignment="Center"/>
-                                    <TextBox x:Name="BookingTotalPriceTextBox"
-                     Grid.Row="10"
-                     Grid.Column="1"
-                     Height="34"/>
-
-                                    <TextBlock Grid.Row="12"
+                                    <TextBlock Grid.Row="5"
                        Grid.Column="0"
                        Text="Notes:"
                        VerticalAlignment="Top"
                        Margin="0,6,0,0"/>
                                     <TextBox x:Name="BookingNotesTextBox"
-                     Grid.Row="12"
+                     Grid.Row="5"
                      Grid.Column="1"
                      Height="90"
                      AcceptsReturn="True"
                      TextWrapping="Wrap"
-                     VerticalScrollBarVisibility="Auto"/>
+                     VerticalScrollBarVisibility="Auto"
+                                             Margin="0,6,0,0"
+                                             Text="{Binding CurrentBooking.Notes, UpdateSourceTrigger=PropertyChanged}"/>
                                 </Grid>
                             </Border>
 
@@ -984,7 +984,7 @@
                     Background="White"
                     CornerRadius="10"
                     Padding="18"
-                        Visibility="Visible">
+                        Visibility="Collapsed">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -1323,7 +1323,7 @@
                                     <TextBox Grid.Row="0" Grid.Column="1" Height="34" Text="{Binding CurrentClient.FullName, UpdateSourceTrigger=PropertyChanged}" />
 
                                     <TextBlock Grid.Row="2" Grid.Column="0" Text="Date of Birth:" VerticalAlignment="Center"/>
-                                    <DatePicker Grid.Row="2" Grid.Column="1" Height="34" SelectedDate="{Binding CurrentClient.DateOfBirth, UpdateSourceTrigger=PropertyChanged}" />
+                                    <DatePicker Grid.Row="2" Grid.Column="1" Height="34" SelectedDate="{Binding CurrentClient.BirthDate, UpdateSourceTrigger=PropertyChanged}" />
 
                                     <TextBlock Grid.Row="4" Grid.Column="0" Text="Phone:" VerticalAlignment="Center"/>
                                     <TextBox Grid.Row="4" Grid.Column="1" Height="34" Text="{Binding CurrentClient.Phone, UpdateSourceTrigger=PropertyChanged}" />

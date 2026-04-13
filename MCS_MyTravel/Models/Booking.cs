@@ -13,8 +13,8 @@ namespace MCS_MyTravel.Models
         public int ClientId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public string Destination { get; set; }
-        public string Notes { get; set; }
+        public string Destination { get; set; } = string.Empty;
+        public string Notes { get; set; } = string.Empty;
 
         public decimal HotelPrice { get; set; }
         public bool IncludeTravelPrice { get; set; }
@@ -23,6 +23,7 @@ namespace MCS_MyTravel.Models
         public decimal InsurancePrice { get; set; }
         public bool IncludeTaxesPrice { get; set; }
         public decimal TaxesPrice { get; set; }
+        public decimal FinalTotalPrice { get; set; }
 
         public ICollection<Passenger> Passengers { get; set; } = new List<Passenger>();
         public ICollection<Payment> Payments { get; set; } = new List<Payment>();

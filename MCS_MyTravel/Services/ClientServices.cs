@@ -44,7 +44,7 @@ namespace MCS_MyTravel.Services
             return await _clientRepo.GetByIdAsync(id);
         }
 
-        public async Task RemoveClientASync(int id)
+        public async Task RemoveClientAsync(int id)
         {
             var existingClient = await _clientRepo.GetByIdAsync(id);
 

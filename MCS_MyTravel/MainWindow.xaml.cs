@@ -15,8 +15,6 @@ namespace MCS_MyTravel
     {
         private readonly MainViewModel viewModel;
 
-        private BookingServices bookingServices = new BookingServices();
-
         public MainWindow(MainViewModel vm)
         {
             InitializeComponent();
@@ -25,72 +23,22 @@ namespace MCS_MyTravel
         }
         private Client? SelectedClient => ClientList.SelectedItem as Client;
 
-        /* private Booking SelectedBooking
-        {
-            get { return BookingList.SelectedItem as Booking; }
-        } */
-
-        private void ShowNoClientSelectedView()
-        {
-            NoClientSelectedView.Visibility = Visibility.Visible;
-            SelectedClientView.Visibility = Visibility.Collapsed;
-            AddNewClientView.Visibility = Visibility.Collapsed;
-            BookingPanel.Visibility = Visibility.Collapsed;
-            DocumentChoiceView.Visibility = Visibility.Collapsed;
-            PaymentsPanel.Visibility = Visibility.Collapsed;
-
-        }
-
-        private void ShowSelectedClientView()
-        {
-            NoClientSelectedView.Visibility = Visibility.Collapsed;
-            SelectedClientView.Visibility = Visibility.Visible;
-            AddNewClientView.Visibility = Visibility.Collapsed;
-            BookingPanel.Visibility = Visibility.Collapsed;
-            DocumentChoiceView.Visibility = Visibility.Collapsed;
-            PaymentsPanel.Visibility = Visibility.Collapsed;
-
-            EditButton.IsEnabled = true;
-        }
-
-        private void ShowAddNewClientView()
-        {
-            NoClientSelectedView.Visibility = Visibility.Collapsed;
-            SelectedClientView.Visibility = Visibility.Collapsed;
-            AddNewClientView.Visibility = Visibility.Visible;
-            BookingPanel.Visibility = Visibility.Collapsed;
-            DocumentChoiceView.Visibility = Visibility.Collapsed;
-            PaymentsPanel.Visibility = Visibility.Collapsed;
-        }
-        private void ShowBookingView()
-        {
-            NoClientSelectedView.Visibility = Visibility.Collapsed;
-            SelectedClientView.Visibility = Visibility.Collapsed;
-            AddNewClientView.Visibility = Visibility.Collapsed;
-            BookingPanel.Visibility = Visibility.Visible;
-            DocumentChoiceView.Visibility = Visibility.Collapsed;
-            PaymentsPanel.Visibility = Visibility.Collapsed;
-        }
-
-        private void ShowDocumentChoiceState()
+        private void HideAllPanels()
         {
             NoClientSelectedView.Visibility = Visibility.Collapsed;
             SelectedClientView.Visibility = Visibility.Collapsed;
             AddNewClientView.Visibility = Visibility.Collapsed;
             BookingPanel.Visibility = Visibility.Collapsed;
-            DocumentChoiceView.Visibility = Visibility.Visible;
             PaymentsPanel.Visibility = Visibility.Collapsed;
+            DocumentChoiceView.Visibility = Visibility.Collapsed;
         }
 
-        private void ShowPaymentState()
-        {
-            NoClientSelectedView.Visibility = Visibility.Collapsed;
-            SelectedClientView.Visibility = Visibility.Collapsed;
-            AddNewClientView.Visibility = Visibility.Collapsed;
-            BookingPanel.Visibility = Visibility.Collapsed;
-            DocumentChoiceView.Visibility = Visibility.Collapsed;
-            PaymentsPanel.Visibility = Visibility.Visible;
-        }
+        private void ShowNoClientSelectedView() { HideAllPanels(); NoClientSelectedView.Visibility = Visibility.Visible; }
+        private void ShowSelectedClientView() { HideAllPanels(); SelectedClientView.Visibility = Visibility.Visible; }
+        private void ShowAddNewClientView() { HideAllPanels(); AddNewClientView.Visibility = Visibility.Visible; }
+        private void ShowBookingView() { HideAllPanels(); BookingPanel.Visibility = Visibility.Visible; }
+        private void ShowPaymentState() { HideAllPanels(); PaymentsPanel.Visibility = Visibility.Visible; }
+        private void ShowDocumentChoiceState() { HideAllPanels(); DocumentChoiceView.Visibility = Visibility.Visible; }
 
         // this is just for viewing the state of adding a new client
         private void AddNewClient_Click(object sender, RoutedEventArgs e)
@@ -110,7 +58,7 @@ namespace MCS_MyTravel
             }
         }
 
-        private void ClientList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void ClientList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             EditButton.IsEnabled = true;
 
@@ -120,20 +68,10 @@ namespace MCS_MyTravel
                 return;
             }
 
-            ShowSelectedClientView();
-
-            viewModel.CurrentClient = new Client
-            {
-                Id = SelectedClient.Id,
-                FullName = SelectedClient.FullName,
-                BirthDate = SelectedClient.BirthDate,
-                Phone = SelectedClient.Phone,
-                PassportId = SelectedClient.PassportId,
-                Notes = SelectedClient.Notes
-            };
-
+            viewModel.CurrentClient = SelectedClient; // just this, no manual copying
+            await viewModel.LoadBookingsForClientAsync(); // load their bookings too
             ClientNameHeader.Text = SelectedClient.FullName;
-
+            ShowSelectedClientView();
             SetEditingState(false);
         }
 
@@ -151,6 +89,11 @@ namespace MCS_MyTravel
 
         private void CancelAddNewClient_Click(Object sender, RoutedEventArgs e)
         {
+            if (SelectedClient != null)
+                ShowSelectedClientView();
+            else
+                ShowNoClientSelectedView();
+
             SetEditingState(false);
         }
 
@@ -161,13 +104,13 @@ namespace MCS_MyTravel
             {
                 await viewModel.SaveClientAsync();
                 MessageBox.Show("Client saved successfully.");
+                
+                ShowBookingView();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
-            ShowBookingView();
         }
 
         private void ArrangeBooking(Object sender, RoutedEventArgs e)
@@ -177,7 +120,7 @@ namespace MCS_MyTravel
             ShowBookingView();
         }
 
-        private void SaveBookingButton_Click(object sender, RoutedEventArgs e)
+        private async void SaveBookingButton_Click(object sender, RoutedEventArgs e)
         {
 
             if ( SelectedClient == null )
@@ -191,9 +134,15 @@ namespace MCS_MyTravel
             viewModel.CurrentBooking.Destination = BookingPlaceTextBox.Text;
             viewModel.CurrentBooking.Notes = BookingNotesTextBox.Text;
 
-            bookingServices.AddBooking(viewModel.CurrentBooking);
-
-            ShowPaymentState();
+            try
+            {
+                await viewModel.SaveBookingAsync();
+                ShowPaymentState();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error saving booking", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void CancelBookingButton_Click(object sender, RoutedEventArgs e)
@@ -201,7 +150,6 @@ namespace MCS_MyTravel
             BookingStartDatePicker.SelectedDate = null;
             BookingEndDatePicker.SelectedDate = null;
             BookingPlaceTextBox.Text = "";
-            BookingTotalPriceTextBox.Text = "";
             BookingNotesTextBox.Text = "";
 
             viewModel.CurrentBooking.Passengers.Clear();
@@ -239,7 +187,7 @@ namespace MCS_MyTravel
             viewModel.CurrentBooking.Passengers.Remove(passenger);
         }
 
-        private void SavePaymentButton_Click(object sender, EventArgs e)
+        private void SavePaymentButton_Click(object sender, RoutedEventArgs e)
         {
             ShowDocumentChoiceState();
         }
@@ -287,8 +235,10 @@ namespace MCS_MyTravel
             decimal taxes = (IncludeTaxesCheckBox.IsChecked == true && decimal.TryParse(TaxesPriceBox.Text, out var tx)) ? tx : 0;
 
             decimal total = hotel + travel + insurance + taxes;
-
             CalculatedTotalText.Text = total.ToString("F2");
+            SummaryTotalText.Text = total.ToString("F2");
+
+            UpdatePaymentSummary(total);
         }
 
         private void UpdatePaymentSummary(decimal total)
