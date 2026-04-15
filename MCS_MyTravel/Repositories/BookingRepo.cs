@@ -17,6 +17,7 @@ namespace MCS_MyTravel.Repositories
         {
             _context = context;
         }
+
         public async Task AddBookingAsync(Booking booking)
         {
             _context.Bookings.Add(booking);
@@ -50,7 +51,7 @@ namespace MCS_MyTravel.Repositories
             return await _context.Bookings
                 .Include(b => b.Passengers)
                 .Include(b => b.Payments)
-                .FirstOrDefaultAsync(c => c.Id == id);
+                .FirstOrDefaultAsync(b => b.Id == id);
         }
 
         public async Task UpdateNewBookingAsync(Booking booking)

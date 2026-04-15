@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using MCS_MyTravel.Models;
 using MCS_MyTravel.Services;
 
@@ -96,22 +97,57 @@ namespace MCS_MyTravel.ViewModel
 
         public async Task SaveClientAsync()
         {
+            if ( CurrentClient == null )
+            {
+                    throw new Exception("CurrentClient is not well selected ");
+            }
+
             try
             {
                 IsLoading = true;
                 ErrorMessage = string.Empty;
+                MessageBox.Show($"CurrentClient ID = {CurrentClient.Id}, Name = {CurrentClient.FullName}");
 
                 if (CurrentClient.Id == 0)
                     await _clientServices.CreateClientAsync(CurrentClient);
                 else
-                    await _clientServices.UpdateClientAsync(CurrentClient);
+                    throw new Exception("CurrentClient is not well selected, it has ID != 0, it thinks its an existing one ");
 
                 await LoadClientsAsync();
-                CurrentClient = new Client();
             }
             catch (Exception ex)
             {
                 ErrorMessage = $"Failed to save client: {ex.Message}";
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+        }
+        public async Task UpdateClientAsync()
+        {
+            if (CurrentClient == null)
+            {
+                throw new Exception("CurrentClient is not well selected ");
+            }
+
+            try
+            {
+                IsLoading = true;
+                ErrorMessage = string.Empty;
+                MessageBox.Show($"CurrentClient ID = {CurrentClient.Id}, Name = {CurrentClient.FullName}");
+                
+                if (CurrentClient.Id == 0)
+                    throw new Exception("CurrentClient is not well selected, it has ID = 0, it thinks its a new one ");
+                else
+                    await _clientServices.UpdateClientAsync(CurrentClient);
+                
+                //update listing
+                await LoadClientsAsync();
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Failed to update client: {ex.Message}";
             }
             finally
             {
@@ -176,7 +212,7 @@ namespace MCS_MyTravel.ViewModel
                 IsLoading = true;
                 ErrorMessage = string.Empty;
 
-                CurrentBooking.ClientId = CurrentClient.Id;
+                System.Diagnostics.Debug.WriteLine($"Client ID: {CurrentClient?.Id}, Name: {CurrentClient?.FullName}");
                 CurrentBooking.FinalTotalPrice = CurrentBooking.TotalPrice;
 
                 if (CurrentBooking.Id == 0)
@@ -195,7 +231,8 @@ namespace MCS_MyTravel.ViewModel
             }
             catch (Exception ex)
             {
-                ErrorMessage = $"Failed to save booking: {ex.Message}";
+                ErrorMessage = $"Failed to save booking: {ex.ToString}";
+                throw;
             }
             finally
             {

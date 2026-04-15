@@ -18,6 +18,7 @@ namespace MCS_MyTravel.Models
 
         public string DocumentNumber { get; set; } = string.Empty;
         public decimal TotalPrice { get; set; }
+
         public string Notes { get; set; } = string.Empty;
     }
 }

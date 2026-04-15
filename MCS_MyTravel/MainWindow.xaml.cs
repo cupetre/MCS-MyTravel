@@ -40,11 +40,6 @@ namespace MCS_MyTravel
         private void ShowPaymentState() { HideAllPanels(); PaymentsPanel.Visibility = Visibility.Visible; }
         private void ShowDocumentChoiceState() { HideAllPanels(); DocumentChoiceView.Visibility = Visibility.Visible; }
 
-        // this is just for viewing the state of adding a new client
-        private void AddNewClient_Click(object sender, RoutedEventArgs e)
-        {
-            ShowAddNewClientView();
-        }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -58,6 +53,7 @@ namespace MCS_MyTravel
             }
         }
 
+        // ova e pri loadanje
         private async void ClientList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             EditButton.IsEnabled = true;
@@ -97,19 +93,40 @@ namespace MCS_MyTravel
             SetEditingState(false);
         }
 
-        // Creating a new client from base / updating existing client
+        //button for creating a new client
+        private void AddNewClient_Click(object sender, RoutedEventArgs e)
+        {
+            ClientList.SelectedItem = null;
+            viewModel.CurrentClient = new Client();
+            ShowAddNewClientView();
+        }
+
+        // adding a new client to DB
         private async void SaveNewClient_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 await viewModel.SaveClientAsync();
                 MessageBox.Show("Client saved successfully.");
-                
                 ShowBookingView();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        // Updating existing client
+        private async void SaveClientChanges_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                await viewModel.UpdateClientAsync();
+                MessageBox.Show("Client updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -117,32 +134,48 @@ namespace MCS_MyTravel
         {
             // first we check for the entered info/data for the client here
             // if everything is as itshould be. ask if he wants to continue to booking state
+            
             ShowBookingView();
+
         }
 
         private async void SaveBookingButton_Click(object sender, RoutedEventArgs e)
         {
-
-            if ( SelectedClient == null )
+            if (viewModel.CurrentClient.Id == 0)
             {
+                MessageBox.Show("No client selected for this booking.");
                 return;
             }
 
-            viewModel.CurrentBooking.ClientId = SelectedClient.Id;
-            viewModel.CurrentBooking.StartDate = BookingStartDatePicker.SelectedDate ?? DateTime.MinValue;
-            viewModel.CurrentBooking.EndDate = BookingEndDatePicker.SelectedDate ?? DateTime.MinValue;
+            MessageBox.Show($"CurrentClient ID = {viewModel.CurrentClient.Id}, Name = {viewModel.CurrentClient.FullName}");
+
+            viewModel.CurrentBooking.ClientId = viewModel.CurrentClient.Id;
+
+            if (BookingStartDatePicker.SelectedDate == null)
+            {
+                MessageBox.Show("Start date is required.");
+                return;
+            }
+
+            if (BookingEndDatePicker.SelectedDate == null)
+            {
+                MessageBox.Show("End date is required.");
+                return;
+            }
+
             viewModel.CurrentBooking.Destination = BookingPlaceTextBox.Text;
             viewModel.CurrentBooking.Notes = BookingNotesTextBox.Text;
 
-            try
-            {
+           try
+           {
                 await viewModel.SaveBookingAsync();
+                MessageBox.Show("Booking saved successfully.");
                 ShowPaymentState();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error saving booking", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+           }
+           catch (Exception ex)
+           {
+                MessageBox.Show(ex.ToString(), "Error saving booking", MessageBoxButton.OK, MessageBoxImage.Error);
+           }
         }
 
         private void CancelBookingButton_Click(object sender, RoutedEventArgs e)

@@ -274,7 +274,7 @@
                     Background="White"
                     CornerRadius="10"
                     Padding="18"
-                    Visibility="Visible">
+                    Visibility="Collapsed">
 
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <Grid>
@@ -628,7 +628,7 @@
                     Background="White"
                     CornerRadius="10"
                     Padding="18"
-                    Visibility="Collapsed">
+                    Visibility="Visible">
 
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <Grid>
@@ -1039,7 +1039,7 @@
                                     Width="110"
                                     Height="34"
                                     FontWeight="SemiBold"
-                                                Click="SaveNewClient_Click"
+                                                Click="SaveClientChanges_Click"
                                                 IsEnabled="False"/>
                                     </StackPanel>
                                 </Grid>

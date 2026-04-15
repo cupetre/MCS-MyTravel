@@ -58,7 +58,7 @@ namespace MCS_MyTravel.Services
 
         public async Task<Client> UpdateClientAsync(Client client)
         {
-            ValidateClient(client);
+            ValidateClient(client); // validira toj so go PULLNAVME OD FRONT DALI E OKEj
 
             //if all good
             var existingClient = await _clientRepo.GetByIdAsync(client.Id);
@@ -69,7 +69,7 @@ namespace MCS_MyTravel.Services
             }
 
             //else
-            bool passportExists = await _clientRepo.ExistsByPassportIdAsync(client.PassportId);
+            bool passportExists = await _clientRepo.ExistsByPassportIdAsync(client.PassportId, client.Id);
 
             if (passportExists)
             {
@@ -79,12 +79,12 @@ namespace MCS_MyTravel.Services
             existingClient.FullName = client.FullName.Trim();
             existingClient.PassportId = client.PassportId.Trim();
             existingClient.BirthDate = client.BirthDate;
-            existingClient.Phone = client.Phone.Trim();
-            existingClient.Notes = client.Notes.Trim();
+            //klavame prasalnici vo slucaj da bida ostaeni prazni pohsot ne se rrequired
+            existingClient.Phone = client.Phone?.Trim();
+            existingClient.Notes = client.Notes?.Trim();
 
             await _clientRepo.UpdateClientAsync(existingClient);
             return existingClient;
-
         }
 
         private static string? ValidateClient(Client client)

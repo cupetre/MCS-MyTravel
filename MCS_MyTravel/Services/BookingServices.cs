@@ -20,6 +20,15 @@ namespace MCS_MyTravel.Services
 
         public async Task<Booking> CreateBookingAsync(Booking booking)
         {
+            if (booking.StartDate == default)
+                throw new InvalidOperationException("Start date is required.");
+
+            if (booking.EndDate == default)
+                throw new InvalidOperationException("End date is required.");
+
+            if (booking.EndDate < booking.StartDate)
+                throw new InvalidOperationException("End date cannot be before start date.");
+
             try
             {
                 await _bookingRepo.AddBookingAsync(booking);
