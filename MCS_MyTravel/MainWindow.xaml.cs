@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using MCS_MyTravel.Models;
@@ -37,9 +38,12 @@ namespace MCS_MyTravel
         private void ShowSelectedClientView() { HideAllPanels(); SelectedClientView.Visibility = Visibility.Visible; }
         private void ShowAddNewClientView() { HideAllPanels(); AddNewClientView.Visibility = Visibility.Visible; }
         private void ShowBookingView() { HideAllPanels(); BookingPanel.Visibility = Visibility.Visible; }
-        private void ShowPaymentState() { HideAllPanels(); PaymentsPanel.Visibility = Visibility.Visible; }
+        private async Task ShowPaymentState() { HideAllPanels(); 
+            PaymentsPanel.Visibility = Visibility.Visible; 
+            await viewModel.LoadPaymentsForBookingAsync();
+            RecalculateTotal();
+        }
         private void ShowDocumentChoiceState() { HideAllPanels(); DocumentChoiceView.Visibility = Visibility.Visible; }
-
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -130,15 +134,6 @@ namespace MCS_MyTravel
             }
         }
 
-        private void ArrangeBooking(Object sender, RoutedEventArgs e)
-        {
-            // first we check for the entered info/data for the client here
-            // if everything is as itshould be. ask if he wants to continue to booking state
-            
-            ShowBookingView();
-
-        }
-
         private async void SaveBookingButton_Click(object sender, RoutedEventArgs e)
         {
             if (viewModel.CurrentClient.Id == 0)
@@ -220,11 +215,6 @@ namespace MCS_MyTravel
             viewModel.CurrentBooking.Passengers.Remove(passenger);
         }
 
-        private void SavePaymentButton_Click(object sender, RoutedEventArgs e)
-        {
-            ShowDocumentChoiceState();
-        }
-
         private void AgreementCard_Click(object sender, MouseButtonEventArgs e)
         {
             // ShowAgreementForm(); — hook this up later
@@ -240,34 +230,49 @@ namespace MCS_MyTravel
             // ShowInvoiceForm(); — hook this up later
         }
 
+        private void PriceField_Changed(object sender, TextChangedEventArgs e)
+        {
+            UpdatePaymentSummary(viewModel.CurrentBooking.TotalPrice);
+            SummaryTotalText.Text = viewModel.CurrentBooking.TotalPrice.ToString("F2");
+        }
+
         private void PriceCheckBox_Changed(object sender, RoutedEventArgs e)
         {
-            if (TravelPriceBox == null) return;
-
             TravelPriceBox.IsEnabled = IncludeTravelCheckBox.IsChecked == true;
             InsurancePriceBox.IsEnabled = IncludeInsuranceCheckBox.IsChecked == true;
             TaxesPriceBox.IsEnabled = IncludeTaxesCheckBox.IsChecked == true;
 
-            RecalculateTotal();
-        }
-
-        private void PriceField_Changed(object sender, TextChangedEventArgs e)
-        {
-            RecalculateTotal();
+            UpdatePaymentSummary(viewModel.CurrentBooking.TotalPrice);
+            SummaryTotalText.Text = viewModel.CurrentBooking.TotalPrice.ToString("F2");
         }
 
         private void RecalculateTotal()
         {
-            // Controls not loaded yet, skip
-            if (HotelPriceBox == null || CalculatedTotalText == null)
-                return;
+            if ( viewModel.CurrentBooking == null )
+            {
+                throw new KeyNotFoundException("current booking is nowhere to be found");
+            }
 
-            decimal hotel = decimal.TryParse(HotelPriceBox.Text, out var h) ? h : 0;
-            decimal travel = (IncludeTravelCheckBox.IsChecked == true && decimal.TryParse(TravelPriceBox.Text, out var t)) ? t : 0;
-            decimal insurance = (IncludeInsuranceCheckBox.IsChecked == true && decimal.TryParse(InsurancePriceBox.Text, out var i)) ? i : 0;
-            decimal taxes = (IncludeTaxesCheckBox.IsChecked == true && decimal.TryParse(TaxesPriceBox.Text, out var tx)) ? tx : 0;
+            viewModel.CurrentBooking.HotelPrice =
+        decimal.TryParse(HotelPriceBox.Text, out var h) ? h : 0;
 
-            decimal total = hotel + travel + insurance + taxes;
+            viewModel.CurrentBooking.IncludeTravelPrice = IncludeTravelCheckBox.IsChecked == true;
+            viewModel.CurrentBooking.TravelPrice =
+                viewModel.CurrentBooking.IncludeTravelPrice &&
+                decimal.TryParse(TravelPriceBox.Text, out var t) ? t : 0;
+
+            viewModel.CurrentBooking.IncludeInsurancePrice = IncludeInsuranceCheckBox.IsChecked == true;
+            viewModel.CurrentBooking.InsurancePrice =
+                viewModel.CurrentBooking.IncludeInsurancePrice &&
+                decimal.TryParse(InsurancePriceBox.Text, out var i) ? i : 0;
+
+            viewModel.CurrentBooking.IncludeTaxesPrice = IncludeTaxesCheckBox.IsChecked == true;
+            viewModel.CurrentBooking.TaxesPrice =
+                viewModel.CurrentBooking.IncludeTaxesPrice &&
+                decimal.TryParse(TaxesPriceBox.Text, out var tx) ? tx : 0;
+
+            decimal total = viewModel.CurrentBooking.TotalPrice;
+
             CalculatedTotalText.Text = total.ToString("F2");
             SummaryTotalText.Text = total.ToString("F2");
 
@@ -276,9 +281,7 @@ namespace MCS_MyTravel
 
         private void UpdatePaymentSummary(decimal total)
         {
-            decimal paid = viewModel.CurrentBooking.Payments
-                .Sum(p => p.Amount);
-
+            decimal paid = viewModel.Payments.Sum(p => p.Amount);
             decimal remaining = total - paid;
             decimal percent = total > 0 ? (paid / total * 100) : 0;
 
@@ -287,31 +290,54 @@ namespace MCS_MyTravel
             SummaryPercentText.Text = $"{percent:F0}%";
         }
 
-        private void AddPaymentButton_Click(object sender, RoutedEventArgs e)
+        private async void AddPaymentButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!decimal.TryParse(PaymentAmountBox.Text, out decimal amount) || amount <= 0)
+            if (viewModel.CurrentBooking.Id <= 0)
             {
-                MessageBox.Show("Please enter a valid payment amount.", "Validation");
+                MessageBox.Show("save the booking before adding payments.", "Validation");
                 return;
             }
 
-            Payment payment = new Payment
+            if (!decimal.TryParse(PaymentAmountBox.Text, out decimal amount) || amount <= 0)
             {
+                MessageBox.Show("needs a valid payment amount", "Validation");
+                return;
+            }
+
+            if (PaymentDatePicker.SelectedDate == null)
+            {
+                MessageBox.Show("no date is entered", "Validation");
+                return;
+            }
+
+            viewModel.CurrentPayment = new Payment
+            {
+                BookingId = viewModel.CurrentBooking.Id,
                 Amount = amount,
-                PaymentDate = PaymentDatePicker.SelectedDate ?? DateTime.Today,
+                PaymentDate = PaymentDatePicker.SelectedDate.Value,
                 Notes = PaymentNotesBox.Text
             };
 
-            viewModel.CurrentBooking.Payments.Add(payment);
+            try
+            {
+                await viewModel.SavePaymentAsync();
 
-            // Clear the entry fields
-            PaymentAmountBox.Text = "";
-            PaymentDatePicker.SelectedDate = null;
-            PaymentNotesBox.Text = "";
+                PaymentAmountBox.Text = "";
+                PaymentDatePicker.SelectedDate = null;
+                PaymentNotesBox.Text = "";
 
-            RecalculateTotal();
+                UpdatePaymentSummary(viewModel.CurrentBooking.TotalPrice);
+
+                MessageBox.Show("Paymeent was added successfully");
+            } catch ( Exception ex )
+            {
+                MessageBox.Show(ex.ToString(), "Error saving payment", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
+
+
+        // this is what we have in the selected client view ( for adding payments )
         private void AddPaymentFromClientView_Click(object sender, RoutedEventArgs e)
         {
             ShowPaymentState();

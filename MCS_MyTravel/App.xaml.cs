@@ -42,6 +42,9 @@ namespace MCS_MyTravel
                     services.AddScoped<IBookingRepo, BookingRepo>();
                     services.AddScoped<IBookingServices, BookingServices>();
 
+                    services.AddScoped<IPaymentRepo, PaymentRepo>();
+                    services.AddScoped<IPaymentServices, PaymentServices>();
+
                     services.AddScoped<MainViewModel>();
                     services.AddTransient<MainWindow>();
                 })

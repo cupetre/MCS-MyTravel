@@ -12,14 +12,14 @@ namespace MCS_MyTravel.Models
         public int Id { get; set; }
         
         [Required]
-        public string FullName { get; set; }
-        
+        public string FullName { get; set; } = string.Empty;
+
         [Required]
         public DateTime BirthDate { get; set; }
         public string? Phone { get; set; }
         
         [Required]
-        public string PassportId { get; set; }
+        public string PassportId { get; set; } = string.Empty;
         public string? Notes {  get; set; }
 
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();

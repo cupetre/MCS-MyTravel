@@ -66,7 +66,7 @@ namespace MCS_MyTravel.Services
             }
         }
 
-        public async Task<List<Booking?>> GetBookingsByClientIdAsync(int clientId)
+        public async Task<List<Booking>> GetBookingsByClientIdAsync(int clientId)
         {
             if (clientId <= 0)
                 throw new ArgumentException("Client ID must be greater than zero.", nameof(clientId));

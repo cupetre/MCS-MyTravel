@@ -698,19 +698,22 @@
                                     <TextBox x:Name="HotelPriceBox"
                              Grid.Row="2" Grid.Column="1"
                              Height="34"
-                             TextChanged="PriceField_Changed"/>
+                             Text="{Binding CurrentBooking.HotelPrice, UpdateSourceTrigger=PropertyChanged}"
+                                TextChanged="PriceField_Changed"/>
 
                                     <!-- Travel Price -->
                                     <CheckBox x:Name="IncludeTravelCheckBox"
                               Grid.Row="4" Grid.Column="0"
                               Content="Include Travel Price"
                               VerticalAlignment="Center"
+                              IsChecked="{Binding CurrentBooking.IncludeTravelPrice}"
                               Checked="PriceCheckBox_Changed"
                               Unchecked="PriceCheckBox_Changed"/>
                                     <TextBox x:Name="TravelPriceBox"
                              Grid.Row="4" Grid.Column="1"
                              Height="34"
                              IsEnabled="False"
+                             Text="{Binding CurrentBooking.TravelPrice, UpdateSourceTrigger=PropertyChanged}"
                              TextChanged="PriceField_Changed"/>
 
                                     <!-- Insurance -->
@@ -718,12 +721,14 @@
                               Grid.Row="6" Grid.Column="0"
                               Content="Include Insurance"
                               VerticalAlignment="Center"
+                                              IsChecked="{Binding CurrentBooking.IncludeInsurancePrice}"
                               Checked="PriceCheckBox_Changed"
                               Unchecked="PriceCheckBox_Changed"/>
                                     <TextBox x:Name="InsurancePriceBox"
                              Grid.Row="6" Grid.Column="1"
                              Height="34"
                              IsEnabled="False"
+                                      Text="{Binding CurrentBooking.InsurancePrice, UpdateSourceTrigger=PropertyChanged}"
                              TextChanged="PriceField_Changed"/>
 
                                     <!-- Taxes -->
@@ -731,12 +736,14 @@
                               Grid.Row="8" Grid.Column="0"
                               Content="Include Taxes"
                               VerticalAlignment="Center"
+                                              IsChecked="{Binding CurrentBooking.IncludeTaxesPrice}"
                               Checked="PriceCheckBox_Changed"
                               Unchecked="PriceCheckBox_Changed"/>
                                     <TextBox x:Name="TaxesPriceBox"
                              Grid.Row="8" Grid.Column="1"
                              Height="34"
                              IsEnabled="False"
+                                                      Text="{Binding CurrentBooking.TaxesPrice, UpdateSourceTrigger=PropertyChanged}"
                              TextChanged="PriceField_Changed"/>
 
                                     <!-- Calculated Total -->
@@ -758,7 +765,7 @@
                                        VerticalAlignment="Center"/>
                                             <TextBlock x:Name="CalculatedTotalText"
                                        Grid.Column="1"
-                                       Text="0.00"
+                                                       Text="{Binding CurrentBooking.TotalPrice}"
                                        FontSize="20"
                                        FontWeight="Bold"
                                        Foreground="#166534"/>

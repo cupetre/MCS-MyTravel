@@ -11,6 +11,7 @@ namespace MCS_MyTravel.ViewModel
     {
         private readonly IClientServices _clientServices;
         private readonly IBookingServices _bookingServices;
+        private readonly IPaymentServices _paymentServices;
 
          // ------------------
         public Booking _currentBooking { get; set; } = new();
@@ -21,8 +22,15 @@ namespace MCS_MyTravel.ViewModel
         public Client _currentClient { get; set; } = new();
 
         // -------------------
+        public ObservableCollection<Payment> Payments { get; set; } = new();
+        public Payment _currentPayment { get; set; } = new();
+
+        // --------------------
+
         public event PropertyChangedEventHandler? PropertyChanged;
+
         // -------------------
+
         private bool _isLoading;
         private string _errorMessage = string.Empty;
 
@@ -45,6 +53,16 @@ namespace MCS_MyTravel.ViewModel
                 OnPropertyChanged(); 
             }
         }
+
+        public Payment CurrentPayment
+        {
+            get => _currentPayment;
+            set
+            {
+                _currentPayment = value;
+                OnPropertyChanged();
+            }
+        }
         public bool IsLoading
         {
             get => _isLoading;
@@ -58,11 +76,13 @@ namespace MCS_MyTravel.ViewModel
 
         public MainViewModel(
             IClientServices clientServices,
-            IBookingServices bookingServices
+            IBookingServices bookingServices,
+            IPaymentServices paymentServices
             )
         {
             _clientServices = clientServices;
             _bookingServices = bookingServices;
+            _paymentServices = paymentServices;
 
             CurrentClient = new Client();
 
@@ -71,6 +91,8 @@ namespace MCS_MyTravel.ViewModel
                 Passengers = new ObservableCollection<Passenger>(),
                 Payments = new ObservableCollection<Payment>()
             };
+
+            CurrentPayment = new Payment();
         }
         // ── Client methods ───────────────────────────────────────────
         public async Task LoadClientsAsync()
@@ -118,6 +140,7 @@ namespace MCS_MyTravel.ViewModel
             catch (Exception ex)
             {
                 ErrorMessage = $"Failed to save client: {ex.Message}";
+                throw;
             }
             finally
             {
@@ -148,6 +171,7 @@ namespace MCS_MyTravel.ViewModel
             catch (Exception ex)
             {
                 ErrorMessage = $"Failed to update client: {ex.Message}";
+                throw;
             }
             finally
             {
@@ -267,6 +291,32 @@ namespace MCS_MyTravel.ViewModel
             {
                 IsLoading = false;
             }
+        }
+
+        // -- Payments Methods ---------------------------------------
+        public async Task LoadPaymentsForBookingAsync()
+        {
+            if (CurrentBooking.Id <= 0)
+                return;
+
+            var payments = await _paymentServices.GetPaymentsByBookingIdAsync(CurrentBooking.Id);
+
+            Payments.Clear();
+            foreach (var payment in payments)
+                Payments.Add(payment);
+        }
+
+        public async Task SavePaymentAsync()
+        {
+            CurrentPayment.BookingId = CurrentBooking.Id;
+
+            if (CurrentPayment.Id == 0)
+                await _paymentServices.CreatePaymentAsync(CurrentPayment);
+            else
+                await _paymentServices.UpdatePaymentAsync(CurrentPayment);
+
+            await LoadPaymentsForBookingAsync();
+            CurrentPayment = new Payment();
         }
 
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
