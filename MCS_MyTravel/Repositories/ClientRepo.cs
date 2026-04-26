@@ -58,7 +58,6 @@ namespace MCS_MyTravel.Repositories
             {
                 query = query.Where(c => c.Id != excludeClientId.Value);
             }
-
             return await query.AnyAsync();
         }
     }

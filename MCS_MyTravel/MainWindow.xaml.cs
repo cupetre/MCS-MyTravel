@@ -134,6 +134,11 @@ namespace MCS_MyTravel
             }
         }
 
+        private void AssignBookingForSelectedClient_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show($"the selectedLCients name is = {viewModel.CurrentClient.FullName}");
+            ShowBookingView();
+        }
         private async void SaveBookingButton_Click(object sender, RoutedEventArgs e)
         {
             if (viewModel.CurrentClient.Id == 0)
@@ -165,7 +170,7 @@ namespace MCS_MyTravel
            {
                 await viewModel.SaveBookingAsync();
                 MessageBox.Show("Booking saved successfully.");
-                ShowPaymentState();
+                await ShowPaymentState();
            }
            catch (Exception ex)
            {
@@ -294,9 +299,11 @@ namespace MCS_MyTravel
         {
             if (viewModel.CurrentBooking.Id <= 0)
             {
-                MessageBox.Show("save the booking before adding payments.", "Validation");
-                return;
+                throw new KeyNotFoundException("current booking was not found");
             }
+
+            MessageBox.Show($"CurrentClient ID = {viewModel.CurrentClient.Id}, BookingId = {viewModel.CurrentBooking.Id}");
+            
 
             if (!decimal.TryParse(PaymentAmountBox.Text, out decimal amount) || amount <= 0)
             {

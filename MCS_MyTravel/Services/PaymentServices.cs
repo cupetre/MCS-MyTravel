@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using MCS_MyTravel.Models;
 using MCS_MyTravel.Repositories;
 
@@ -30,7 +31,7 @@ namespace MCS_MyTravel.Services
 
             if (booking == null)
             {
-                throw new KeyNotFoundException("booking did not that that ID");
+                throw new KeyNotFoundException("booking did not find that ID");
             }
 
             await _paymentRepo.AddPaymentAsync(payment);

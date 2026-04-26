@@ -628,7 +628,7 @@
                     Background="White"
                     CornerRadius="10"
                     Padding="18"
-                    Visibility="Visible">
+                    Visibility="Collapsed">
 
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <Grid>
@@ -991,7 +991,7 @@
                     Background="White"
                     CornerRadius="10"
                     Padding="18"
-                        Visibility="Collapsed">
+                        Visibility="Visible">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -1034,6 +1034,12 @@
                                     <StackPanel Grid.Column="1"
                                     Orientation="Horizontal"
                                     VerticalAlignment="Top">
+                                        <Button x:Name="AssignBooking"
+                                                Content="Make Client"
+                                    Width="100"
+                                    Height="34"
+                                    Margin="0,0,10,0"
+                                                Click="AssignBookingForSelectedClient_Click"/>
                                         <Button x:Name="EditButton"
                                                 Content="Edit Client"
                                     Width="100"
