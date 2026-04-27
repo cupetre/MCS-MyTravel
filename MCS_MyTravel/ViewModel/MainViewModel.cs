@@ -1,9 +1,10 @@
-﻿using System.Collections.ObjectModel;
+﻿using MCS_MyTravel.Models;
+using MCS_MyTravel.Services;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using MCS_MyTravel.Models;
-using MCS_MyTravel.Services;
 
 namespace MCS_MyTravel.ViewModel
 {
@@ -306,26 +307,33 @@ namespace MCS_MyTravel.ViewModel
         public async Task LoadPaymentsForSelectedClientAsync()
         {
             if (CurrentClient == null || CurrentClient.Id <= 0)
-                throw new KeyNotFoundException("no selected Client");
-            
+                throw new KeyNotFoundException("No selected client");
+
             var bookings = await _bookingServices.GetBookingsByClientIdAsync(CurrentClient.Id);
 
-            if ( CurrentBooking == null )
+            CurrentBooking = bookings.FirstOrDefault();
+
+            if (CurrentBooking == null)
             {
                 Payments.Clear();
+                Debug.WriteLine($"Client: {CurrentClient.FullName} has no booking.");
                 return;
             }
+
+            Debug.WriteLine($"CurrentClient: {CurrentClient.FullName}");
+            Debug.WriteLine($"BookingId: {CurrentBooking.Id}");
+            Debug.WriteLine($"Bookings count: {bookings.Count}");
 
             var payments = await _paymentServices.GetPaymentsByBookingIdAsync(CurrentBooking.Id);
 
             Payments.Clear();
 
-            foreach(var payment in payments)
+            foreach (var payment in payments)
             {
                 Payments.Add(payment);
+                Debug.WriteLine($"PaymentId: {payment.Id}, Amount: {payment.Amount}, Date: {payment.PaymentDate}");
             }
         }
-
 
         public async Task SavePaymentAsync()
         {

@@ -35,9 +35,16 @@ namespace MCS_MyTravel
         }
 
         private void ShowNoClientSelectedView() { HideAllPanels(); NoClientSelectedView.Visibility = Visibility.Visible; }
-        private async Task ShowSelectedClientView() { HideAllPanels();
+        private async Task ShowSelectedClientView()
+        {
+            HideAllPanels();
             SelectedClientView.Visibility = Visibility.Visible;
+
+            if (viewModel.CurrentClient == null || viewModel.CurrentClient.Id <= 0)
+                return;
+
             await viewModel.LoadPaymentsForSelectedClientAsync();
+            UpdatePaymentSummary();
         }
         private void ShowAddNewClientView() { HideAllPanels(); AddNewClientView.Visibility = Visibility.Visible; }
         private void ShowBookingView() { HideAllPanels(); BookingPanel.Visibility = Visibility.Visible; }
@@ -260,7 +267,7 @@ namespace MCS_MyTravel
 
         private void PriceField_Changed(object sender, TextChangedEventArgs e)
         {
-            UpdatePaymentSummary(viewModel.CurrentBooking.TotalPrice);
+            UpdatePaymentSummary();
             SummaryTotalText.Text = viewModel.CurrentBooking.TotalPrice.ToString("F2");
         }
 
@@ -270,7 +277,7 @@ namespace MCS_MyTravel
             InsurancePriceBox.IsEnabled = IncludeInsuranceCheckBox.IsChecked == true;
             TaxesPriceBox.IsEnabled = IncludeTaxesCheckBox.IsChecked == true;
 
-            UpdatePaymentSummary(viewModel.CurrentBooking.TotalPrice);
+            UpdatePaymentSummary();
             SummaryTotalText.Text = viewModel.CurrentBooking.TotalPrice.ToString("F2");
         }
 
@@ -304,15 +311,20 @@ namespace MCS_MyTravel
             CalculatedTotalText.Text = total.ToString("F2");
             SummaryTotalText.Text = total.ToString("F2");
 
-            UpdatePaymentSummary(total);
+            UpdatePaymentSummary();
         }
-        
-        private void UpdatePaymentSummary(decimal total)
+
+        private void UpdatePaymentSummary()
         {
+            decimal total = viewModel.CurrentBooking?.FinalTotalPrice ?? 0;
             decimal paid = viewModel.Payments.Sum(p => p.Amount);
             decimal remaining = total - paid;
-            decimal percent = total > 0 ? (paid / total * 100) : 0;
+            decimal percent = total > 0 ? paid / total * 100 : 0;
 
+            if (remaining < 0) remaining = 0;
+            if (percent > 100) percent = 100;
+
+            SummaryTotalText.Text = total.ToString("F2");
             SummaryPaidText.Text = paid.ToString("F2");
             SummaryRemainingText.Text = remaining.ToString("F2");
             SummaryPercentText.Text = $"{percent:F0}%";
@@ -352,11 +364,11 @@ namespace MCS_MyTravel
                 await viewModel.SavePaymentAsync();
                 await viewModel.LoadPaymentsForSelectedClientAsync();
 
+                UpdatePaymentSummary();
+
                 PaymentAmountBox.Text = "";
                 PaymentDatePicker.SelectedDate = null;
                 PaymentNotesBox.Text = "";
-
-                UpdatePaymentSummary(viewModel.CurrentBooking.FinalTotalPrice);
 
                 MessageBox.Show("Paymeent was added successfully");
             } catch ( Exception ex )
@@ -372,6 +384,7 @@ namespace MCS_MyTravel
             try
             {
                 await viewModel.LoadPaymentsForSelectedClientAsync();
+                UpdatePaymentSummary();
                 await ShowPaymentState();
             }
             catch (Exception ex)
