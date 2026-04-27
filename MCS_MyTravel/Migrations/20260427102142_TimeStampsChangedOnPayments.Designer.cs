@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MCS_MyTravel.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260426120845_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260427102142_TimeStampsChangedOnPayments")]
+    partial class TimeStampsChangedOnPayments
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -205,7 +205,7 @@ namespace MCS_MyTravel.Migrations
                         .HasColumnType("character varying(2000)");
 
                     b.Property<DateTime>("PaymentDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 

@@ -139,6 +139,7 @@ namespace MCS_MyTravel
             MessageBox.Show($"the selectedLCients name is = {viewModel.CurrentClient.FullName}");
             ShowBookingView();
         }
+
         private async void SaveBookingButton_Click(object sender, RoutedEventArgs e)
         {
             if (viewModel.CurrentClient.Id == 0)
@@ -204,9 +205,28 @@ namespace MCS_MyTravel
             SaveChangesButton.IsEnabled = isEditing;
         }
 
-        private void AddPassengerButton_Click(Object sender, RoutedEventArgs e)
+        private void AddPassengerButton_Click(object sender, RoutedEventArgs e)
         {
-            viewModel.CurrentBooking.Passengers.Add(new Passenger());
+            if (string.IsNullOrWhiteSpace(PassengerFullNameTextBox.Text))
+            {
+                MessageBox.Show("Passenger full name is required.");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(PassengerPassportTextBox.Text))
+            {
+                MessageBox.Show("Passenger passport ID is required.");
+                return;
+            }
+
+            viewModel.CurrentBooking.Passengers.Add(new Passenger
+            {
+                FullName = PassengerFullNameTextBox.Text.Trim(),
+                PassportId = PassengerPassportTextBox.Text.Trim()
+            });
+
+            PassengerFullNameTextBox.Text = "";
+            PassengerPassportTextBox.Text = "";
         }
 
         private void RemovePassengerButton_Click(object sender, RoutedEventArgs e)
@@ -303,7 +323,6 @@ namespace MCS_MyTravel
             }
 
             MessageBox.Show($"CurrentClient ID = {viewModel.CurrentClient.Id}, BookingId = {viewModel.CurrentBooking.Id}");
-            
 
             if (!decimal.TryParse(PaymentAmountBox.Text, out decimal amount) || amount <= 0)
             {

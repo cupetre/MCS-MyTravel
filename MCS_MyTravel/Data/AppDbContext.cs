@@ -57,6 +57,11 @@ namespace MCS_MyTravel.Data
                       .WithMany(x => x.Bookings)
                       .HasForeignKey(x => x.ClientId)
                       .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasMany(x => x.Passengers)
+                      .WithOne(x => x.Booking)
+                      .HasForeignKey(x => x.BookingId)
+                      .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Passenger>(entity =>
@@ -77,6 +82,8 @@ namespace MCS_MyTravel.Data
             {
                 entity.ToTable("Payments");
                 entity.HasKey(x => x.Id);
+
+                entity.Property(x => x.PaymentDate).HasColumnType("timestamp without time zone");
 
                 entity.Property(x => x.Amount).HasColumnType("numeric(12,2)");
                 entity.Property(x => x.Notes).HasMaxLength(2000);

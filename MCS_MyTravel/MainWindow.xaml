@@ -451,7 +451,6 @@
                             </Border>
 
                             <!-- PASSENGERS -->
-                            <!-- PASSENGERS -->
                             <Border Grid.Row="6"
                                 Padding="16"
                                 CornerRadius="8"

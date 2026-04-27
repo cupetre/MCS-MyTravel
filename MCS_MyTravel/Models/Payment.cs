@@ -12,7 +12,7 @@ namespace MCS_MyTravel.Models
         public decimal Amount { get; set; }
         public int BookingId { get; set; }
         public DateTime PaymentDate { get; set; }
-        public string Notes { get; set; }
+        public string Notes { get; set; } = string.Empty;
 
         public Booking Booking { get; set; }
     }

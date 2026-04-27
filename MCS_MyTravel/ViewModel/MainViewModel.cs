@@ -245,13 +245,8 @@ namespace MCS_MyTravel.ViewModel
                     await _bookingServices.UpdateBookingAsync(CurrentBooking);
 
                 await LoadBookingsForClientAsync();
+                await LoadPaymentsForBookingAsync();
 
-                // Reset to a fresh booking but keep passengers/payments initialized
-                CurrentBooking = new Booking
-                {
-                    Passengers = new ObservableCollection<Passenger>(),
-                    Payments = new ObservableCollection<Payment>()
-                };
             }
             catch (Exception ex)
             {
