@@ -239,6 +239,8 @@ namespace MCS_MyTravel.ViewModel
                 System.Diagnostics.Debug.WriteLine($"Client ID: {CurrentClient?.Id}, Name: {CurrentClient?.FullName}");
                 CurrentBooking.FinalTotalPrice = CurrentBooking.TotalPrice;
 
+                System.Diagnostics.Debug.WriteLine($" FinalTotalPrice is : {CurrentBooking.FinalTotalPrice}");
+
                 if (CurrentBooking.Id == 0)
                     await _bookingServices.CreateBookingAsync(CurrentBooking);
                 else
@@ -300,6 +302,30 @@ namespace MCS_MyTravel.ViewModel
             foreach (var payment in payments)
                 Payments.Add(payment);
         }
+
+        public async Task LoadPaymentsForSelectedClientAsync()
+        {
+            if (CurrentClient == null || CurrentClient.Id <= 0)
+                throw new KeyNotFoundException("no selected Client");
+            
+            var bookings = await _bookingServices.GetBookingsByClientIdAsync(CurrentClient.Id);
+
+            if ( CurrentBooking == null )
+            {
+                Payments.Clear();
+                return;
+            }
+
+            var payments = await _paymentServices.GetPaymentsByBookingIdAsync(CurrentBooking.Id);
+
+            Payments.Clear();
+
+            foreach(var payment in payments)
+            {
+                Payments.Add(payment);
+            }
+        }
+
 
         public async Task SavePaymentAsync()
         {

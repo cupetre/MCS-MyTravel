@@ -35,7 +35,10 @@ namespace MCS_MyTravel
         }
 
         private void ShowNoClientSelectedView() { HideAllPanels(); NoClientSelectedView.Visibility = Visibility.Visible; }
-        private void ShowSelectedClientView() { HideAllPanels(); SelectedClientView.Visibility = Visibility.Visible; }
+        private async Task ShowSelectedClientView() { HideAllPanels();
+            SelectedClientView.Visibility = Visibility.Visible;
+            await viewModel.LoadPaymentsForSelectedClientAsync();
+        }
         private void ShowAddNewClientView() { HideAllPanels(); AddNewClientView.Visibility = Visibility.Visible; }
         private void ShowBookingView() { HideAllPanels(); BookingPanel.Visibility = Visibility.Visible; }
         private async Task ShowPaymentState() { HideAllPanels(); 
@@ -296,14 +299,14 @@ namespace MCS_MyTravel
                 viewModel.CurrentBooking.IncludeTaxesPrice &&
                 decimal.TryParse(TaxesPriceBox.Text, out var tx) ? tx : 0;
 
-            decimal total = viewModel.CurrentBooking.TotalPrice;
+            decimal total = viewModel.CurrentBooking.FinalTotalPrice;
 
             CalculatedTotalText.Text = total.ToString("F2");
             SummaryTotalText.Text = total.ToString("F2");
 
             UpdatePaymentSummary(total);
         }
-
+        
         private void UpdatePaymentSummary(decimal total)
         {
             decimal paid = viewModel.Payments.Sum(p => p.Amount);
@@ -347,12 +350,13 @@ namespace MCS_MyTravel
             try
             {
                 await viewModel.SavePaymentAsync();
+                await viewModel.LoadPaymentsForSelectedClientAsync();
 
                 PaymentAmountBox.Text = "";
                 PaymentDatePicker.SelectedDate = null;
                 PaymentNotesBox.Text = "";
 
-                UpdatePaymentSummary(viewModel.CurrentBooking.TotalPrice);
+                UpdatePaymentSummary(viewModel.CurrentBooking.FinalTotalPrice);
 
                 MessageBox.Show("Paymeent was added successfully");
             } catch ( Exception ex )
@@ -362,11 +366,18 @@ namespace MCS_MyTravel
         }
 
 
-
         // this is what we have in the selected client view ( for adding payments )
-        private void AddPaymentFromClientView_Click(object sender, RoutedEventArgs e)
+        private async void AddPaymentFromClientView_Click(object sender, RoutedEventArgs e)
         {
-            ShowPaymentState();
+            try
+            {
+                await viewModel.LoadPaymentsForSelectedClientAsync();
+                await ShowPaymentState();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Error loading payments");
+            }
         }
     }
 }

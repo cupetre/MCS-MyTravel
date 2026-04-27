@@ -627,7 +627,7 @@
                     Background="White"
                     CornerRadius="10"
                     Padding="18"
-                    Visibility="Collapsed">
+                    Visibility="Visible">
 
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <Grid>
@@ -990,7 +990,7 @@
                     Background="White"
                     CornerRadius="10"
                     Padding="18"
-                        Visibility="Visible">
+                        Visibility="Collapsed">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -1220,7 +1220,7 @@
                                     <ListBox x:Name="PaymentHistoryList"
                  BorderThickness="0"
                  Background="Transparent"
-                 ItemsSource="{Binding CurrentBooking.Payments}">
+                 ItemsSource="{Binding Payments}">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
                                                 <Border Background="#F9FAFB"
@@ -1245,7 +1245,7 @@
                                        VerticalAlignment="Center"/>
 
                                                         <TextBlock Grid.Column="1"
-                                       Text="{Binding Date, StringFormat=dd/MM/yyyy}"
+                                       Text="{Binding PaymentDate, StringFormat=dd/MM/yyyy}"
                                        FontSize="13"
                                        VerticalAlignment="Center"/>
 
@@ -1257,7 +1257,7 @@
                                        VerticalAlignment="Center"/>
 
                                                         <TextBlock Grid.Column="3"
-                                       Text="{Binding Note}"
+                                       Text="{Binding Notes}"
                                        FontSize="13"
                                        Foreground="#6B7280"
                                        VerticalAlignment="Center"
