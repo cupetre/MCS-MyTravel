@@ -1,11 +1,12 @@
-﻿using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using MCS_MyTravel.Models;
+﻿using MCS_MyTravel.Models;
 using MCS_MyTravel.Repositories;
 using MCS_MyTravel.Services;
 using MCS_MyTravel.ViewModel;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace MCS_MyTravel
 {
@@ -44,7 +45,6 @@ namespace MCS_MyTravel
                 return;
 
             await viewModel.LoadPaymentsForSelectedClientAsync();
-            UpdatePaymentSummary();
         }
         private void ShowAddNewClientView() { HideAllPanels(); AddNewClientView.Visibility = Visibility.Visible; }
         private void ShowBookingView() { HideAllPanels(); BookingPanel.Visibility = Visibility.Visible; }
@@ -53,7 +53,6 @@ namespace MCS_MyTravel
             await viewModel.LoadPaymentsForBookingAsync();
             RecalculateTotal();
         }
-        private void ShowDocumentChoiceState() { HideAllPanels(); DocumentChoiceView.Visibility = Visibility.Visible; }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -81,7 +80,8 @@ namespace MCS_MyTravel
             viewModel.CurrentClient = SelectedClient; // just this, no manual copying
             await viewModel.LoadBookingsForClientAsync(); // load their bookings too
             ClientNameHeader.Text = SelectedClient.FullName;
-            ShowSelectedClientView();
+            await ShowSelectedClientView();
+            UpdatePaymentsVisibility();
             SetEditingState(false);
         }
 
@@ -111,7 +111,20 @@ namespace MCS_MyTravel
         private void AddNewClient_Click(object sender, RoutedEventArgs e)
         {
             ClientList.SelectedItem = null;
+
             viewModel.CurrentClient = new Client();
+
+            viewModel.CurrentBooking = new Booking
+            {
+                Passengers = new ObservableCollection<Passenger>(),
+                Payments = new ObservableCollection<Payment>()
+            };
+
+            viewModel.CurrentPayment = new Payment();
+            viewModel.Payments.Clear();
+
+            viewModel.RecalculatePaymentSummary();
+
             ShowAddNewClientView();
         }
 
@@ -265,10 +278,43 @@ namespace MCS_MyTravel
             // ShowInvoiceForm(); — hook this up later
         }
 
+        private void SyncPricesToCurrentBooking()
+        {
+            if (viewModel.CurrentBooking == null)
+                return;
+
+            viewModel.CurrentBooking.HotelPrice =
+                decimal.TryParse(HotelPriceBox.Text, out var hotel) ? hotel : 0;
+
+            viewModel.CurrentBooking.IncludeTravelPrice =
+                IncludeTravelCheckBox.IsChecked == true;
+
+            viewModel.CurrentBooking.TravelPrice =
+                viewModel.CurrentBooking.IncludeTravelPrice &&
+                decimal.TryParse(TravelPriceBox.Text, out var travel) ? travel : 0;
+
+            viewModel.CurrentBooking.IncludeInsurancePrice =
+                IncludeInsuranceCheckBox.IsChecked == true;
+
+            viewModel.CurrentBooking.InsurancePrice =
+                viewModel.CurrentBooking.IncludeInsurancePrice &&
+                decimal.TryParse(InsurancePriceBox.Text, out var insurance) ? insurance : 0;
+
+            viewModel.CurrentBooking.IncludeTaxesPrice =
+                IncludeTaxesCheckBox.IsChecked == true;
+
+            viewModel.CurrentBooking.TaxesPrice =
+                viewModel.CurrentBooking.IncludeTaxesPrice &&
+                decimal.TryParse(TaxesPriceBox.Text, out var taxes) ? taxes : 0;
+
+            viewModel.CurrentBooking.FinalTotalPrice =
+                viewModel.CurrentBooking.TotalPrice;
+        }
+
         private void PriceField_Changed(object sender, TextChangedEventArgs e)
         {
-            UpdatePaymentSummary();
-            SummaryTotalText.Text = viewModel.CurrentBooking.TotalPrice.ToString("F2");
+            SyncPricesToCurrentBooking();
+            viewModel.RecalculatePaymentSummary();
         }
 
         private void PriceCheckBox_Changed(object sender, RoutedEventArgs e)
@@ -277,8 +323,8 @@ namespace MCS_MyTravel
             InsurancePriceBox.IsEnabled = IncludeInsuranceCheckBox.IsChecked == true;
             TaxesPriceBox.IsEnabled = IncludeTaxesCheckBox.IsChecked == true;
 
-            UpdatePaymentSummary();
-            SummaryTotalText.Text = viewModel.CurrentBooking.TotalPrice.ToString("F2");
+            SyncPricesToCurrentBooking();
+            viewModel.RecalculatePaymentSummary();
         }
 
         private void RecalculateTotal()
@@ -309,25 +355,6 @@ namespace MCS_MyTravel
             decimal total = viewModel.CurrentBooking.FinalTotalPrice;
 
             CalculatedTotalText.Text = total.ToString("F2");
-            SummaryTotalText.Text = total.ToString("F2");
-
-            UpdatePaymentSummary();
-        }
-
-        private void UpdatePaymentSummary()
-        {
-            decimal total = viewModel.CurrentBooking?.FinalTotalPrice ?? 0;
-            decimal paid = viewModel.Payments.Sum(p => p.Amount);
-            decimal remaining = total - paid;
-            decimal percent = total > 0 ? paid / total * 100 : 0;
-
-            if (remaining < 0) remaining = 0;
-            if (percent > 100) percent = 100;
-
-            SummaryTotalText.Text = total.ToString("F2");
-            SummaryPaidText.Text = paid.ToString("F2");
-            SummaryRemainingText.Text = remaining.ToString("F2");
-            SummaryPercentText.Text = $"{percent:F0}%";
         }
 
         private async void AddPaymentButton_Click(object sender, RoutedEventArgs e)
@@ -364,7 +391,7 @@ namespace MCS_MyTravel
                 await viewModel.SavePaymentAsync();
                 await viewModel.LoadPaymentsForSelectedClientAsync();
 
-                UpdatePaymentSummary();
+                viewModel.RecalculatePaymentSummary();
 
                 PaymentAmountBox.Text = "";
                 PaymentDatePicker.SelectedDate = null;
@@ -377,6 +404,21 @@ namespace MCS_MyTravel
             }
         }
 
+        private void UpdatePaymentsVisibility()
+        {
+            if (viewModel.Payments.Count == 0)
+            {
+                PaymentHistoryList.Visibility = Visibility.Collapsed;
+                NoPaymentsPlaceholder.Visibility = Visibility.Visible;
+                PaymentSummaryBlock.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                PaymentHistoryList.Visibility = Visibility.Visible;
+                NoPaymentsPlaceholder.Visibility = Visibility.Collapsed;
+                PaymentSummaryBlock.Visibility = Visibility.Visible;
+            }
+        }
 
         // this is what we have in the selected client view ( for adding payments )
         private async void AddPaymentFromClientView_Click(object sender, RoutedEventArgs e)
@@ -384,7 +426,6 @@ namespace MCS_MyTravel
             try
             {
                 await viewModel.LoadPaymentsForSelectedClientAsync();
-                UpdatePaymentSummary();
                 await ShowPaymentState();
             }
             catch (Exception ex)

@@ -64,6 +64,62 @@ namespace MCS_MyTravel.ViewModel
                 OnPropertyChanged();
             }
         }
+
+        private decimal _paymentTotal;
+        public decimal PaymentTotal
+        {
+            get => _paymentTotal;
+            set
+            {
+                _paymentTotal = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private decimal _paidSoFar;
+        public decimal PaidSoFar
+        {
+            get => _paidSoFar;
+            set
+            {
+                _paidSoFar = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private decimal _remainingAmount;
+        public decimal RemainingAmount
+        {
+            get => _remainingAmount;
+            set
+            {
+                _remainingAmount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private decimal _paidPercentage;
+        public decimal PaidPercentage
+        {
+            get => _paidPercentage;
+            set
+            {
+                _paidPercentage = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _paymentStatus = "Unpaid";
+        public string PaymentStatus
+        {
+            get => _paymentStatus;
+            set
+            {
+                _paymentStatus = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool IsLoading
         {
             get => _isLoading;
@@ -311,12 +367,13 @@ namespace MCS_MyTravel.ViewModel
 
             var bookings = await _bookingServices.GetBookingsByClientIdAsync(CurrentClient.Id);
 
-            CurrentBooking = bookings.FirstOrDefault();
+           CurrentBooking = bookings.FirstOrDefault();
 
             if (CurrentBooking == null)
             {
                 Payments.Clear();
                 Debug.WriteLine($"Client: {CurrentClient.FullName} has no booking.");
+                RecalculatePaymentSummary();
                 return;
             }
 
@@ -333,10 +390,15 @@ namespace MCS_MyTravel.ViewModel
                 Payments.Add(payment);
                 Debug.WriteLine($"PaymentId: {payment.Id}, Amount: {payment.Amount}, Date: {payment.PaymentDate}");
             }
+
+            RecalculatePaymentSummary();
         }
 
         public async Task SavePaymentAsync()
         {
+            if (CurrentBooking == null || CurrentBooking.Id <= 0)
+                throw new KeyNotFoundException("Current booking was not found");
+
             CurrentPayment.BookingId = CurrentBooking.Id;
 
             if (CurrentPayment.Id == 0)
@@ -345,7 +407,37 @@ namespace MCS_MyTravel.ViewModel
                 await _paymentServices.UpdatePaymentAsync(CurrentPayment);
 
             await LoadPaymentsForBookingAsync();
+
             CurrentPayment = new Payment();
+        }
+
+        public void RecalculatePaymentSummary()
+        {
+            decimal total = CurrentBooking?.FinalTotalPrice ?? 0;
+            decimal paid = Payments.Sum(p => p.Amount);
+
+            decimal remaining = total - paid;
+            decimal percent = total > 0 ? paid / total * 100 : 0;
+
+            if (remaining < 0)
+                remaining = 0;
+
+            if (percent > 100)
+                percent = 100;
+
+            PaymentTotal = total;
+            PaidSoFar = paid;
+            RemainingAmount = remaining;
+            PaidPercentage = percent;
+
+            if (total <= 0)
+                PaymentStatus = "No price set";
+            else if (paid >= total)
+                PaymentStatus = "Fully paid";
+            else if (paid > 0)
+                PaymentStatus = "Partially paid";
+            else
+                PaymentStatus = "Unpaid";
         }
 
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
