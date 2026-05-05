@@ -73,7 +73,7 @@ Generated\ Files/
 publish/
 
 # Azure / local secrets
-appsettings.Development.json
+appsettings.json
 secrets.json
 
 # If you later add environment files
